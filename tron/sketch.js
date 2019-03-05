@@ -9,7 +9,6 @@
 let myGrid;
 state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
 
-
 function setup(){
 	gx = 20;//grid x and y
 	gy = 20;
@@ -54,7 +53,7 @@ function gameState(){//depending on the state of the game, the display will chan
 }
 
 function end(player){
-	console.log('gameover, player ' + player + ' won');
+  console.log('gameover, player ' + player + ' won');
   resetGrid(gx, gy);
   state = 0;
 }
