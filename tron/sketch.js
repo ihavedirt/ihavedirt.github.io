@@ -7,11 +7,11 @@
 
 
 let myGrid;
+let	gx = 30;//grid x and y
+let gy = 30;
 state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
 
 function setup(){
-	gx = 20;//grid x and y
-	gy = 20;
   
   x = 0;//red player spawn
   y = 0;
@@ -72,8 +72,6 @@ function generateGrid(gx, gy){//generates array and visual grid via nested loop/
 }
 
 function resetGrid(gx, gy){//resets grid
-	gx = 20;//grid x and y
-	gy = 20;
   
   x = 0;//red player spawn
   y = 0;
