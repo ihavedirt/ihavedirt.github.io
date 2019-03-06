@@ -1,14 +1,14 @@
-// Project Title
-// Your Name
-// Date
+// Tron
+// David Baik
+// Today
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
 
 let myGrid;
-let	gx = 30;//grid x and y
-let gy = 30;
+let	gx = 20;//grid x and y
+let gy = 20;
 state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
 
 function setup(){
