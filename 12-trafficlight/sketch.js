@@ -17,7 +17,7 @@ function draw() {
   timer = millis() % 9000
   background(255);
   drawOutlineOfLights();
-  lights();
+  lightsCycling();
 }
 
 function drawOutlineOfLights() {
@@ -33,7 +33,7 @@ function drawOutlineOfLights() {
   ellipse(width/2, height/2 + 65, 50, 50); //bottom
 }
 
-function lights() {
+function lightsCycling() {
   if (timer >= 0 && timer <= 3000){
     fill('green');
     ellipse(width/2, height/2 + 65, 50, 50); //bottom
