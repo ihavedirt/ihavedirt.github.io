@@ -5,14 +5,21 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-
+let myFont;
 let myGrid;
 let	gx = 20;//grid x and y
 let gy = 20;
 state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
 
+
+
+
+function preload(){
+  myFont = loadFont('assets/myFont.ttf');
+}
+
 function setup(){
-  
+
   x = 0;//red player spawn
   y = 0;
   
@@ -92,14 +99,16 @@ function startScreen(){//start screen display
   frameRate(100);
   
   fill(15, 41, 47);
-  rect(0, 0, 20 * gx, 20 * gy);
+  rect(0, 0, width, height);
   
   fill(80, 31, 58);
   rect(100, 100, 200, 100, 20);
   
   fill(204, 204, 204);
-  textSize(90)
-  text('Start', 103, 180);
+  textFont(myFont);
+  textSize(70);
+  textAlign(CENTER);
+  text('Start', width/2, height/2.5);
 }
 
 function mouseClicked(){//if start button clicked, draw grid and start game
