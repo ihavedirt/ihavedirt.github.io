@@ -9,8 +9,9 @@ let myFont;
 let myGrid;
 let	gx = 20;//grid x and y
 let gy = 20;
-state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
-
+let state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
+let directionStateR = 0
+let directionStateB = 0
 
 
 
@@ -20,11 +21,11 @@ function preload(){
 
 function setup(){
 
-  x = 0;//red player spawn
-  y = 0;
+  xR = 0;//red player spawn
+  yR = 0;
   
-  x1 = gx-1;//blue player spawn
-  y1 = gy-1;
+  xB = gx-1;//blue player spawn
+  yB = gy-1;
   
   createCanvas(20 * gx + 1, 20 * gy + 1);
   myGrid = generateGrid(gy, gx);
@@ -32,6 +33,7 @@ function setup(){
 
 function draw(){//does this count as making draw loop neat?
   gameState();
+  directionStateCheck();
   // console.log(x);
   // console.log(y);
   // console.log(x1);
@@ -43,13 +45,13 @@ function gameState(){//depending on the state of the game, the display will chan
     startScreen();
   }
   else if(state === 1){
-    myGrid[x][y] = 1;
+    myGrid[xR][yR] = 1;
   	fill(200, 0, 0);
-  	rect(x * 20, y * 20, 20, 20);
+  	rect(xR * 20, yR * 20, 20, 20);
     
-    myGrid[x1][y1] = 2;
+    myGrid[xB][yB] = 2;
   	fill(0, 0, 200);
-  	rect(x1 * 20, y1 * 20, 20, 20);
+  	rect(xB * 20, yB * 20, 20, 20);
   }
   else if (state === 2){
   	end('red');
@@ -80,11 +82,11 @@ function generateGrid(gx, gy){//generates array and visual grid via nested loop/
 
 function resetGrid(gx, gy){//resets grid
   
-  x = 0;//red player spawn
-  y = 0;
+  xR = 0;//red player spawn
+  yR = 0;
   
-  x1 = gx-1;//blue player spawn
-  y1 = gy-1;
+  xB = gx-1;//blue player spawn
+  yB = gy-1;
   
 	for (let i = 0; i < gy; i++){//nested loop to shift all elements and push 0 again
   	for (let j = 0; j < gx; j++){
@@ -126,76 +128,110 @@ function mouseClicked(){//if start button clicked, draw grid and start game
 
 function keyTyped(){//idk how to simplify this, but basically the controls and lose condition
   if (state === 1){
-		if (key === 'a'){
-      if (myGrid[x-1][y] === 0){
-      	x--;
-    	}
-      else {
-      	state = 3;
-      }
-  	}
-		else if (key === 'd'){
-      if (myGrid[x+1][y] === 0){
-  			x++;
-      }
-      else {
-      	state = 3;
-      }
-		}
-		else if (key === 's'){
-      if (myGrid[x][y+1] === 0){
-   			y++;
-      }
-      else {
-      	state = 3;
-      }
-		}
-		else if (key === 'w'){
-      if (myGrid[x][y-1] === 0){
-	  		y--;
-      }
-      else {
-      	state = 3;
-      }
-		}
+	// 	if (key === 'a'){
+  //     if (myGrid[x-1][y] === 0){
+  //     	x--;
+  //   	}
+  //     else {
+  //     	state = 3;
+  //     }
+  // 	}
+	// 	else if (key === 'd'){
+  //     if (myGrid[x+1][y] === 0){
+  // 			x++;
+  //     }
+  //     else {
+  //     	state = 3;
+  //     }
+	// 	}
+	// 	else if (key === 's'){
+  //     if (myGrid[x][y+1] === 0){
+  //  			y++;
+  //     }
+  //     else {
+  //     	state = 3;
+  //     }
+	// 	}
+	// 	else if (key === 'w'){
+  //     if (myGrid[x][y-1] === 0){
+	//   		y--;
+  //     }
+  //     else {
+  //     	state = 3;
+  //     }
+	// 	}
   
     
-  	if (key === 'j'){
-      if (myGrid[x1-1][y1] === 0){
-				x1--;
-      }
-      else {
-      	state = 2;
-      }
-  	}
-		else if (key === 'l'){
-      if (myGrid[x1+1][y1] === 0){
-	  		x1++;
-      }
-      else {
-      	state = 2;
-      }
-		}
-		else if (key === 'k'){
-      if (myGrid[x1][y1+1] === 0){
-   			y1++;
-      }
-      else {
-      	state = 2;
-      }
-		}
-		else if (key === 'i'){
-      if (myGrid[x1][y1-1] === 0){
-	  		y1--;
-      }
-      else {
-      	state = 2;
-      }
-  	}
-  	// else if (key === 'm'){
-  	// 	console.log(myGrid);
-  	// }
+  // 	if (key === 'j'){
+  //     if (myGrid[x1-1][y1] === 0){
+	// 			x1--;
+  //     }
+  //     else {
+  //     	state = 2;
+  //     }
+  // 	}
+	// 	else if (key === 'l'){
+  //     if (myGrid[x1+1][y1] === 0){
+	//   		x1++;
+  //     }
+  //     else {
+  //     	state = 2;
+  //     }
+	// 	}
+	// 	else if (key === 'k'){
+  //     if (myGrid[x1][y1+1] === 0){
+  //  			y1++;
+  //     }
+  //     else {
+  //     	state = 2;
+  //     }
+	// 	}
+	// 	else if (key === 'i'){
+  //     if (myGrid[x1][y1-1] === 0){
+	//   		y1--;
+  //     }
+  //     else {
+  //     	state = 2;
+  //     }
+  //   }
+  // 	// else if (key === 'm'){
+  // 	// 	console.log(myGrid);
+  // 	// }
+
+    if (key === 'a'){
+      directionStateR = 'left';
+    }
+    else if (key === 's'){
+      directionStateR = 'down';
+    }
+    else if (key === 'd'){
+      directionStateR = 'right';
+    }
+    else if (key === 'w'){
+      directionStateR = 'up';
+    }
+
+    if (key === 'j'){
+      directionStateB = 'left';
+    }
+    else if (key === 'k'){
+      directionStateB = 'down';
+    }
+    else if (key === 'l'){
+      directionStateB = 'right';
+    }
+    else if (key === 'i'){
+      directionStateB = 'up';
+    }
   }
 }
 
+function directionStateCheck(){
+  if (directionStateR === 'up'){
+    if (myGrid[xR][yR] === 0){
+      xR-1
+    }
+  }
+  
+}
 
