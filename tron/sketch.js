@@ -229,9 +229,13 @@ function keyTyped(){//idk how to simplify this, but basically the controls and l
 function directionStateCheck(){
   if (directionStateR === 'up'){
     if (myGrid[xR][yR] === 0){
+      yR-1
+    }
+  }
+  if (directionStateR === 'left'){
+    if (myGrid[xR][yR] === 0){
       xR-1
     }
   }
-  
 }
 
