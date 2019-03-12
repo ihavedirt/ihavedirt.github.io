@@ -98,21 +98,21 @@ function startScreen(){//start screen display
   noStroke();
   frameRate(100);
   
-  fill(15, 41, 47);
+  fill(125, 31, 58);
   rect(0, 0, width, height);
   
   fill(80, 31, 58);
-  rect(100, 100, 200, 100, 20);
+  rect(0, 300, 400, 80, 5);
   
   fill(204, 204, 204);
   textFont(myFont);
   textSize(70);
-  textAlign(CENTER);
-  text('Start', width/2, height/2.5);
+  textAlign(LEFT);
+  text('Start', 20, 320);
 }
 
 function mouseClicked(){//if start button clicked, draw grid and start game
-	if (state === 0 && mouseX > 100 && mouseX < 300 && mouseY >100 && mouseY < 200){
+	if (state === 0 && mouseX > 20 && mouseX < 210 && mouseY > 260 && mouseY < 330){
   	state = 1;
     stroke(0);
     for (i =0; i < gx; i++){
