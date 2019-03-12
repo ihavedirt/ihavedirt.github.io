@@ -14,7 +14,7 @@ function setup() {
 }
 
 function draw() {
-  timer = millis() % 9000
+  timer = millis() % 7000
   background(255);
   drawOutlineOfLights();
   lightsCycling();
@@ -42,7 +42,7 @@ function lightsCycling() {
     fill('yellow');
     ellipse(width/2, height/2, 50, 50); //middle
   }
-  else {
+  else if(timer >= 4001 && timer <= 7000){
     fill('red');
     ellipse(width/2, height/2 - 65, 50, 50); //top
   }
