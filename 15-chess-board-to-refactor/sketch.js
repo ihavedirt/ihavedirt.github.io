@@ -2,7 +2,7 @@
 // - in other words, keep the same functionality, but improve the method used
 
 function setup() {
-createCanvas(800, 600);
+createCanvas(600, 300);
 background('black');
 }
 
@@ -16,12 +16,16 @@ function draw() {
     //     }
     // }
 
-    // for (i = 0; i < 600; i += 25){
-    //     for(j = 0; i < 300; j += 25){
-    //         line(300, 150, i, j);
+    for (let i = 25; i < 600; i += 25){
+        for(let j = 25; j < 300; j += 25){
+            fill('white');
+            stroke('white');
+            strokeWeight(0.001);
+            line(300, 150, i, j);
+            ellipse(i, j, 3);
 
-    //     }
-    // }
+        }
+    }
 
 // fill(255);
 // rect(0,0,75,75);
