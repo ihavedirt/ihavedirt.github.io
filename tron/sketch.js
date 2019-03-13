@@ -10,17 +10,16 @@ let myGrid;
 let	gx = 20;//grid x and y
 let gy = 20;
 let state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
-let directionStateR = 0
-let directionStateB = 0
-
-
+let directionStateR = 'right';
+let directionStateB = 'left';
+let timer = 0;
+let lastTimer = 0;
 
 function preload(){
   myFont = loadFont('assets/myFont.ttf');
 }
 
 function setup(){
-
   xR = 0;//red player spawn
   yR = 0;
   
@@ -32,12 +31,12 @@ function setup(){
 }
 
 function draw(){//does this count as making draw loop neat?
+  timer = millis();
   gameState();
-  directionStateCheck();
-  // console.log(x);
-  // console.log(y);
-  // console.log(x1);
-  // console.log(y1);
+  if (state === 1 && timer - lastTimer >= 300) {
+    directionStateCheck();
+    lastTimer = timer;
+  }
 }
 
 function gameState(){//depending on the state of the game, the display will change
@@ -54,9 +53,13 @@ function gameState(){//depending on the state of the game, the display will chan
   	rect(xB * 20, yB * 20, 20, 20);
   }
   else if (state === 2){
+    directionStateR = 'right';
+    directionStateB = 'left';
   	end('red');
   }
   else if (state === 3){
+    directionStateR = 'right';
+    directionStateB = 'left';
   	end('blue');
   }
 }
@@ -128,76 +131,6 @@ function mouseClicked(){//if start button clicked, draw grid and start game
 
 function keyTyped(){//idk how to simplify this, but basically the controls and lose condition
   if (state === 1){
-	// 	if (key === 'a'){
-  //     if (myGrid[x-1][y] === 0){
-  //     	x--;
-  //   	}
-  //     else {
-  //     	state = 3;
-  //     }
-  // 	}
-	// 	else if (key === 'd'){
-  //     if (myGrid[x+1][y] === 0){
-  // 			x++;
-  //     }
-  //     else {
-  //     	state = 3;
-  //     }
-	// 	}
-	// 	else if (key === 's'){
-  //     if (myGrid[x][y+1] === 0){
-  //  			y++;
-  //     }
-  //     else {
-  //     	state = 3;
-  //     }
-	// 	}
-	// 	else if (key === 'w'){
-  //     if (myGrid[x][y-1] === 0){
-	//   		y--;
-  //     }
-  //     else {
-  //     	state = 3;
-  //     }
-	// 	}
-  
-    
-  // 	if (key === 'j'){
-  //     if (myGrid[x1-1][y1] === 0){
-	// 			x1--;
-  //     }
-  //     else {
-  //     	state = 2;
-  //     }
-  // 	}
-	// 	else if (key === 'l'){
-  //     if (myGrid[x1+1][y1] === 0){
-	//   		x1++;
-  //     }
-  //     else {
-  //     	state = 2;
-  //     }
-	// 	}
-	// 	else if (key === 'k'){
-  //     if (myGrid[x1][y1+1] === 0){
-  //  			y1++;
-  //     }
-  //     else {
-  //     	state = 2;
-  //     }
-	// 	}
-	// 	else if (key === 'i'){
-  //     if (myGrid[x1][y1-1] === 0){
-	//   		y1--;
-  //     }
-  //     else {
-  //     	state = 2;
-  //     }
-  //   }
-  // 	// else if (key === 'm'){
-  // 	// 	console.log(myGrid);
-  // 	// }
-
     if (key === 'a'){
       directionStateR = 'left';
     }
@@ -228,13 +161,68 @@ function keyTyped(){//idk how to simplify this, but basically the controls and l
 
 function directionStateCheck(){
   if (directionStateR === 'up'){
-    if (myGrid[xR][yR] === 0){
-      yR-1
+    if (myGrid[xR][yR-1] === 0){
+      yR--
+    }
+    else{
+      state = 3
     }
   }
-  if (directionStateR === 'left'){
-    if (myGrid[xR][yR] === 0){
-      xR-1
+  else if (directionStateR === 'left'){
+    if (myGrid[xR-1][yR] === 0){
+      xR--
+    }
+    else{
+      state = 3
+    }
+  }
+  else if (directionStateR === 'right'){
+    if (myGrid[xR+1][yR] === 0){
+      xR++
+    }
+    else{
+      state = 3
+    }
+  }
+  else if (directionStateR === 'down'){
+    if (myGrid[xR][yR+1] === 0){
+      yR++
+    }
+    else{
+      state = 3
+    }
+  }
+
+  if (directionStateB === 'left'){
+    if (myGrid[xB-1][yB] === 0){
+      xB--
+    }
+    else{
+      state = 2
+    }
+  }
+  else if (directionStateB === 'right'){
+    if (myGrid[xB+1][yB] === 0){
+      xB++
+    }
+    else{
+      state = 2
+    }
+  }
+  else if (directionStateB === 'up'){
+    if (myGrid[xB][yB-1] === 0){
+      yB--
+    }
+    else{
+      state = 2
+    }
+  }
+  else if (directionStateB === 'down'){
+    if (myGrid[xB][yB+1] === 0){
+      yB++
+    }
+    else{
+      state = 2
     }
   }
 }
