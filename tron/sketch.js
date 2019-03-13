@@ -20,11 +20,11 @@ function preload(){
 }
 
 function setup(){
-  xR = 0;//red player spawn
-  yR = 0;
+  playerOneX = 0;//red player spawn
+  playerOneY = 0;
   
-  xB = gx-1;//blue player spawn
-  yB = gy-1;
+  playerTwoX = gx-1;//blue player spawn
+  playerTwoY = gy-1;
   
   createCanvas(20 * gx + 1, 20 * gy + 1);
   myGrid = generateGrid(gy, gx);
@@ -44,18 +44,18 @@ function gameState(){//depending on the state of the game, the display will chan
     startScreen();
   }
   else if(state === 1){
-    myGrid[xR][yR] = 1;
-  	fill(200, 0, 0);
-  	rect(xR * 20, yR * 20, 20, 20);
+    myGrid[playerOneX][playerOneY] = 1;
+  	fill(250, 157, 0);
+  	rect(playerOneX * 20, playerOneY * 20, 20, 20);
     
-    myGrid[xB][yB] = 2;
-  	fill(0, 0, 200);
-  	rect(xB * 20, yB * 20, 20, 20);
+    myGrid[playerTwoX][playerTwoY] = 2;
+  	fill(0, 104, 132);
+  	rect(playerTwoX * 20, playerTwoY * 20, 20, 20);
   }
   else if (state === 2){
     directionStateR = 'right';
     directionStateB = 'left';
-  	end('red');
+  	end('yellow');
   }
   else if (state === 3){
     directionStateR = 'right';
@@ -85,11 +85,11 @@ function generateGrid(gx, gy){//generates array and visual grid via nested loop/
 
 function resetGrid(gx, gy){//resets grid
   
-  xR = 0;//red player spawn
-  yR = 0;
+  playerOneX = 0;//red player spawn
+  playerOneY = 0;
   
-  xB = gx-1;//blue player spawn
-  yB = gy-1;
+  playerTwoX = gx-1;//blue player spawn
+  playerTwoY = gy-1;
   
 	for (let i = 0; i < gy; i++){//nested loop to shift all elements and push 0 again
   	for (let j = 0; j < gx; j++){
@@ -119,11 +119,11 @@ function startScreen(){//start screen display
 function mouseClicked(){//if start button clicked, draw grid and start game
 	if (state === 0 && mouseX > 20 && mouseX < 210 && mouseY > 260 && mouseY < 330){
   	state = 1;
-    stroke(0);
+    stroke(150,219,236);
     for (i =0; i < gx; i++){
       for (j = 0; j < gy; j++){
         rect(i * 20, j * 20, 20, 20);
-        fill('white');
+        fill(137,219,236);
       }
     }
   }
@@ -161,32 +161,32 @@ function keyTyped(){//idk how to simplify this, but basically the controls and l
 
 function directionStateCheck(){
   if (directionStateR === 'up'){
-    if (myGrid[xR][yR-1] === 0){
-      yR--
+    if (myGrid[playerOneX][playerOneY-1] === 0){
+      playerOneY--
     }
     else{
       state = 3
     }
   }
   else if (directionStateR === 'left'){
-    if (myGrid[xR-1][yR] === 0){
-      xR--
+    if (myGrid[playerOneX-1][playerOneY] === 0){
+      playerOneX--
     }
     else{
       state = 3
     }
   }
   else if (directionStateR === 'right'){
-    if (myGrid[xR+1][yR] === 0){
-      xR++
+    if (myGrid[playerOneX+1][playerOneY] === 0){
+      playerOneX++
     }
     else{
       state = 3
     }
   }
   else if (directionStateR === 'down'){
-    if (myGrid[xR][yR+1] === 0){
-      yR++
+    if (myGrid[playerOneX][playerOneY+1] === 0){
+      playerOneY++
     }
     else{
       state = 3
@@ -194,32 +194,32 @@ function directionStateCheck(){
   }
 
   if (directionStateB === 'left'){
-    if (myGrid[xB-1][yB] === 0){
-      xB--
+    if (myGrid[playerTwoX-1][playerTwoY] === 0){
+      playerTwoX--
     }
     else{
       state = 2
     }
   }
   else if (directionStateB === 'right'){
-    if (myGrid[xB+1][yB] === 0){
-      xB++
+    if (myGrid[playerTwoX+1][playerTwoY] === 0){
+      playerTwoX++
     }
     else{
       state = 2
     }
   }
   else if (directionStateB === 'up'){
-    if (myGrid[xB][yB-1] === 0){
-      yB--
+    if (myGrid[playerTwoX][playerTwoY-1] === 0){
+      playerTwoY--
     }
     else{
       state = 2
     }
   }
   else if (directionStateB === 'down'){
-    if (myGrid[xB][yB+1] === 0){
-      yB++
+    if (myGrid[playerTwoX][playerTwoY+1] === 0){
+      playerTwoY++
     }
     else{
       state = 2
