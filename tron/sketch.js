@@ -9,9 +9,9 @@ let myFont;
 let myGrid;
 let	gx = 20;//grid x and y
 let gy = 20;
-let state = 0;//0 = lobby, 1 = game, 2 = red win, 3 = blue win
-let directionStateR = 'right';
-let directionStateB = 'left';
+let state = 0;//0 = lobby, 1 = game, 2 = red win screen, 3 = blue win screen
+let directionStatePlayerOne;
+let directionStatePlayerTwo;
 let timer = 0;
 let lastTimer = 0;
 
@@ -22,10 +22,12 @@ function preload(){
 function setup(){
   playerOneX = 0;//red player spawn
   playerOneY = 0;
-  
+  directionStatePlayerOne = random(['right', 'down']);
+
   playerTwoX = gx-1;//blue player spawn
   playerTwoY = gy-1;
-  
+  directionStatePlayerTwo = random(['left', 'up']);
+
   createCanvas(20 * gx + 1, 20 * gy + 1);
   myGrid = generateGrid(gy, gx);
 }
@@ -33,7 +35,7 @@ function setup(){
 function draw(){//does this count as making draw loop neat?
   timer = millis();
   gameState();
-  if (state === 1 && timer - lastTimer >= 300) {
+  if (state === 1 && timer - lastTimer >= 200) {
     directionStateCheck();
     lastTimer = timer;
   }
@@ -53,13 +55,13 @@ function gameState(){//depending on the state of the game, the display will chan
   	rect(playerTwoX * 20, playerTwoY * 20, 20, 20);
   }
   else if (state === 2){
-    directionStateR = 'right';
-    directionStateB = 'left';
+    directionStatePlayerOne = random(['right', 'down']);
+    directionStatePlayerTwo = random(['left', 'up']);
   	end('yellow');
   }
   else if (state === 3){
-    directionStateR = 'right';
-    directionStateB = 'left';
+    directionStatePlayerOne = random(['right', 'down']);
+    directionStatePlayerTwo = random(['left', 'up']);
   	end('blue');
   }
 }
@@ -103,11 +105,11 @@ function startScreen(){//start screen display
   noStroke();
   frameRate(100);
   
-  fill(125, 31, 58);
+  fill(145, 39, 143);
   rect(0, 0, width, height);
   
-  fill(80, 31, 58);
-  rect(0, 300, 400, 80, 5);
+  fill(110, 0, 108);
+  rect(0, 300, 400, 80);
   
   fill(204, 204, 204);
   textFont(myFont);
@@ -132,35 +134,35 @@ function mouseClicked(){//if start button clicked, draw grid and start game
 function keyTyped(){//idk how to simplify this, but basically the controls and lose condition
   if (state === 1){
     if (key === 'a'){
-      directionStateR = 'left';
+      directionStatePlayerOne = 'left';
     }
     else if (key === 's'){
-      directionStateR = 'down';
+      directionStatePlayerOne = 'down';
     }
     else if (key === 'd'){
-      directionStateR = 'right';
+      directionStatePlayerOne = 'right';
     }
     else if (key === 'w'){
-      directionStateR = 'up';
+      directionStatePlayerOne = 'up';
     }
 
     if (key === 'j'){
-      directionStateB = 'left';
+      directionStatePlayerTwo = 'left';
     }
     else if (key === 'k'){
-      directionStateB = 'down';
+      directionStatePlayerTwo = 'down';
     }
     else if (key === 'l'){
-      directionStateB = 'right';
+      directionStatePlayerTwo = 'right';
     }
     else if (key === 'i'){
-      directionStateB = 'up';
+      directionStatePlayerTwo = 'up';
     }
   }
 }
 
 function directionStateCheck(){
-  if (directionStateR === 'up'){
+  if (directionStatePlayerOne === 'up'){
     if (myGrid[playerOneX][playerOneY-1] === 0){
       playerOneY--
     }
@@ -168,7 +170,7 @@ function directionStateCheck(){
       state = 3
     }
   }
-  else if (directionStateR === 'left'){
+  else if (directionStatePlayerOne === 'left'){
     if (myGrid[playerOneX-1][playerOneY] === 0){
       playerOneX--
     }
@@ -176,7 +178,7 @@ function directionStateCheck(){
       state = 3
     }
   }
-  else if (directionStateR === 'right'){
+  else if (directionStatePlayerOne === 'right'){
     if (myGrid[playerOneX+1][playerOneY] === 0){
       playerOneX++
     }
@@ -184,7 +186,7 @@ function directionStateCheck(){
       state = 3
     }
   }
-  else if (directionStateR === 'down'){
+  else if (directionStatePlayerOne === 'down'){
     if (myGrid[playerOneX][playerOneY+1] === 0){
       playerOneY++
     }
@@ -193,7 +195,7 @@ function directionStateCheck(){
     }
   }
 
-  if (directionStateB === 'left'){
+  if (directionStatePlayerTwo === 'left'){
     if (myGrid[playerTwoX-1][playerTwoY] === 0){
       playerTwoX--
     }
@@ -201,7 +203,7 @@ function directionStateCheck(){
       state = 2
     }
   }
-  else if (directionStateB === 'right'){
+  else if (directionStatePlayerTwo === 'right'){
     if (myGrid[playerTwoX+1][playerTwoY] === 0){
       playerTwoX++
     }
@@ -209,7 +211,7 @@ function directionStateCheck(){
       state = 2
     }
   }
-  else if (directionStateB === 'up'){
+  else if (directionStatePlayerTwo === 'up'){
     if (myGrid[playerTwoX][playerTwoY-1] === 0){
       playerTwoY--
     }
@@ -217,7 +219,7 @@ function directionStateCheck(){
       state = 2
     }
   }
-  else if (directionStateB === 'down'){
+  else if (directionStatePlayerTwo === 'down'){
     if (myGrid[playerTwoX][playerTwoY+1] === 0){
       playerTwoY++
     }
