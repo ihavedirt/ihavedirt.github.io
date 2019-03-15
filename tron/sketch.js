@@ -67,7 +67,16 @@ function gameState(){//depending on the state of the game, the display will chan
 }
 
 function end(player){
-  console.log('gameover, player ' + player + ' won');
+  fill('white');
+  rect(0, 0, width, height);
+
+  fill('black');
+  textFont(myFont);
+  textSize(30);
+  textAlign(CENTER);
+  text('gameover, player ' + player + ' won', width/2, height/2);
+  //how to make this show for a short amount of time
+
   resetGrid(gx, gy);
   state = 0;
 }
@@ -129,6 +138,7 @@ function mouseClicked(){//if start button clicked, draw grid and start game
       }
     }
   }
+  else if(state === 2 || sate === 3 && mouse)//end screen for restart or menu screen
 }
 
 function keyTyped(){//idk how to simplify this, but basically the controls and lose condition
