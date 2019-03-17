@@ -55,30 +55,25 @@ function gameState(){//depending on the state of the game, the display will chan
   	rect(playerTwoX * 20, playerTwoY * 20, 20, 20);
   }
   else if (state === 2){
-    directionStatePlayerOne = random(['right', 'down']);
-    directionStatePlayerTwo = random(['left', 'up']);
   	end('yellow');
   }
   else if (state === 3){
-    directionStatePlayerOne = random(['right', 'down']);
-    directionStatePlayerTwo = random(['left', 'up']);
   	end('blue');
   }
 }
 
 function end(player){
+  directionStatePlayerOne = random(['right', 'down']);
+  directionStatePlayerTwo = random(['left', 'up']);
+
   fill('white');
   rect(0, 0, width, height);
 
   fill('black');
   textFont(myFont);
-  textSize(30);
+  textSize(20);
   textAlign(CENTER);
   text('gameover, player ' + player + ' won', width/2, height/2);
-  //how to make this show for a short amount of time
-
-  resetGrid(gx, gy);
-  state = 0;
 }
 	
 
@@ -95,7 +90,6 @@ function generateGrid(gx, gy){//generates array and visual grid via nested loop/
 }
 
 function resetGrid(gx, gy){//resets grid
-  
   playerOneX = 0;//red player spawn
   playerOneY = 0;
   
@@ -129,16 +123,24 @@ function startScreen(){//start screen display
 
 function mouseClicked(){//if start button clicked, draw grid and start game
 	if (state === 0 && mouseX > 20 && mouseX < 210 && mouseY > 260 && mouseY < 330){
-  	state = 1;
-    stroke(150,219,236);
+    state = 1;
+    drawGrid();
+  }
+  else if(state === 2 || state === 3 && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height){
+    state = 1;
+    resetGrid(gx, gy);
+    drawGrid();
+  }
+}
+
+function drawGrid(){
+  stroke(150,219,236);
     for (i =0; i < gx; i++){
       for (j = 0; j < gy; j++){
         rect(i * 20, j * 20, 20, 20);
         fill(137,219,236);
       }
     }
-  }
-  else if(state === 2 || sate === 3 && mouse)//end screen for restart or menu screen
 }
 
 function keyTyped(){//idk how to simplify this, but basically the controls and lose condition
