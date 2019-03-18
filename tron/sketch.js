@@ -14,6 +14,9 @@ let directionStatePlayerOne;
 let directionStatePlayerTwo;
 let timer = 0;
 let lastTimer = 0;
+let keyInPlayerOne = ['w', 'a', 's', 'd'];
+let keyInPlayerTwo = ['i', 'j', 'k', 'l'];
+let direcOut = ['up', 'left', 'down', 'right'];
 
 function preload(){
   myFont = loadFont('assets/myFont.ttf');
@@ -32,7 +35,7 @@ function setup(){
   myGrid = generateGrid(gy, gx);
 }
 
-function draw(){//does this count as making draw loop neat?
+function draw(){
   timer = millis();
   gameState();
   if (state === 1 && timer - lastTimer >= 200) {
@@ -77,7 +80,7 @@ function end(player){
 }
 	
 
-function generateGrid(gx, gy){//generates array and visual grid via nested loop//code is credited Mr. Schellenberg, but I fully understand the code
+function generateGrid(gx, gy){//generates array via nested loop//code is credited Mr. Schellenberg, but I fully understand the code
   let array = [];
   for (let i = 0; i < gy; i++){
    	let row = [];
@@ -143,32 +146,13 @@ function drawGrid(){
     }
 }
 
-function keyTyped(){//idk how to simplify this, but basically the controls and lose condition
+function keyTyped(){
   if (state === 1){
-    if (key === 'a'){
-      directionStatePlayerOne = 'left';
+  	if (keyInPlayerOne.indexOf(key) > -1){
+      directionStatePlayerOne = direcOut[keyInPlayerOne.indexOf(key)]
     }
-    else if (key === 's'){
-      directionStatePlayerOne = 'down';
-    }
-    else if (key === 'd'){
-      directionStatePlayerOne = 'right';
-    }
-    else if (key === 'w'){
-      directionStatePlayerOne = 'up';
-    }
-
-    if (key === 'j'){
-      directionStatePlayerTwo = 'left';
-    }
-    else if (key === 'k'){
-      directionStatePlayerTwo = 'down';
-    }
-    else if (key === 'l'){
-      directionStatePlayerTwo = 'right';
-    }
-    else if (key === 'i'){
-      directionStatePlayerTwo = 'up';
+    if (keyInPlayerTwo.indexOf(key) > -1){
+      directionStatePlayerTwo = direcOut[keyInPlayerTwo.indexOf(key)]
     }
   }
 }
