@@ -7,8 +7,8 @@
 
 let myFont;
 let myGrid;
-let	gx = 20;//grid x and y
-let gy = 20;
+let	gx = 25;//grid x and y
+let gy = 25;
 let state = 0;//0 = lobby, 1 = game, 2 = red win screen, 3 = blue win screen
 let directionStatePlayerOne;
 let directionStatePlayerTwo;
@@ -58,25 +58,30 @@ function gameState(){//depending on the state of the game, the display will chan
   	rect(playerTwoX * 20, playerTwoY * 20, 20, 20);
   }
   else if (state === 2){
-  	end('yellow');
+  	end('Yellow');
   }
   else if (state === 3){
-  	end('blue');
+  	end('Blue');
   }
 }
 
 function end(player){
-  directionStatePlayerOne = random(['right', 'down']);
-  directionStatePlayerTwo = random(['left', 'up']);
+  fill('maroon');
+  rect(0, 0, width, height/2);
+  
+  fill('red');
+  rect(0, height/2, width, height);
 
-  fill('white');
-  rect(0, 0, width, height);
-
+  noStroke();
   fill('black');
   textFont(myFont);
-  textSize(20);
+  textSize(30);
   textAlign(CENTER);
-  text('gameover, player ' + player + ' won', width/2, height/2);
+  text('Gameover, Player ' + player + ' Won', width/2, height/2);
+
+  text('Restart', width/2, height/4);
+
+  text('Main Menu', width/2, height - height/4);
 }
 	
 
@@ -95,10 +100,12 @@ function generateGrid(gx, gy){//generates array via nested loop//code is credite
 function resetGrid(gx, gy){//resets grid
   playerOneX = 0;//red player spawn
   playerOneY = 0;
+  directionStatePlayerOne = random(['right', 'down']);
   
   playerTwoX = gx-1;//blue player spawn
   playerTwoY = gy-1;
-  
+  directionStatePlayerTwo = random(['left', 'up']);
+
 	for (let i = 0; i < gy; i++){//nested loop to shift all elements and push 0 again
   	for (let j = 0; j < gx; j++){
       myGrid[i].shift();
@@ -115,7 +122,7 @@ function startScreen(){//start screen display
   rect(0, 0, width, height);
   
   fill(110, 0, 108);
-  rect(0, 300, 400, 80);
+  rect(0, 300, width, 80);
   
   fill(204, 204, 204);
   textFont(myFont);
@@ -129,10 +136,14 @@ function mouseClicked(){//if start button clicked, draw grid and start game
     state = 1;
     drawGrid();
   }
-  else if(state === 2 || state === 3 && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height){
+  else if(state === 2 || state === 3 && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height/2){
     state = 1;
     resetGrid(gx, gy);
     drawGrid();
+  }
+  else if(state === 2 || state === 3 && mouseX > 0 && mouseX < width && mouseY > height/2 && mouseY < height){
+    state = 0;
+    resetGrid(gx, gy);
   }
 }
 
