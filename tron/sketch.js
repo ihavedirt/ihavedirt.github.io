@@ -7,8 +7,8 @@
 
 let myFont;
 let myGrid;
-let	gx = 25;//grid x and y
-let gy = 25;
+let	gx = 22;//grid x and y
+let gy = 22;
 let state = 0;//0 = lobby, 1 = game, 2 = red win screen, 3 = blue win screen
 let directionStatePlayerOne;
 let directionStatePlayerTwo;
@@ -18,17 +18,19 @@ let keyInPlayerOne = ['w', 'a', 's', 'd'];
 let keyInPlayerTwo = ['i', 'j', 'k', 'l'];
 let direcOut = ['up', 'left', 'down', 'right'];
 
+let PlayerOne
+
 function preload(){
   myFont = loadFont('assets/myFont.ttf');
 }
 
 function setup(){
-  playerOneX = 0;//red player spawn
-  playerOneY = 0;
+  playerOneX = 1;//red player spawn
+  playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
 
-  playerTwoX = gx-1;//blue player spawn
-  playerTwoY = gy-1;
+  playerTwoX = gx-2;//blue player spawn
+  playerTwoY = gy-2;
   directionStatePlayerTwo = random(['left', 'up']);
 
   createCanvas(20 * gx + 1, 20 * gy + 1);
@@ -73,12 +75,15 @@ function end(player){
   rect(0, height/2, width, height);
 
   noStroke();
-  fill('black');
+  fill(player);
   textFont(myFont);
   textSize(30);
   textAlign(CENTER);
-  text('Gameover, Player ' + player + ' Won', width/2, height/2);
 
+  text('Gameover, Player ' + player + ' Won', width/2, height/2 + 7);
+
+  textSize(20);
+  fill('black');
   text('Restart', width/2, height/4);
 
   text('Main Menu', width/2, height - height/4);
@@ -98,12 +103,12 @@ function generateGrid(gx, gy){//generates array via nested loop//code is credite
 }
 
 function resetGrid(gx, gy){//resets grid
-  playerOneX = 0;//red player spawn
-  playerOneY = 0;
+  playerOneX = 1;//red player spawn
+  playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
   
-  playerTwoX = gx-1;//blue player spawn
-  playerTwoY = gy-1;
+  playerTwoX = gx-2;//blue player spawn
+  playerTwoY = gy-2;
   directionStatePlayerTwo = random(['left', 'up']);
 
 	for (let i = 0; i < gy; i++){//nested loop to shift all elements and push 0 again
@@ -136,21 +141,23 @@ function mouseClicked(){//if start button clicked, draw grid and start game
     state = 1;
     drawGrid();
   }
-  else if(state === 2 || state === 3 && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height/2){
+  else if((state === 2 || state === 3) && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height/2){
     state = 1;
     resetGrid(gx, gy);
     drawGrid();
   }
-  else if(state === 2 || state === 3 && mouseX > 0 && mouseX < width && mouseY > height/2 && mouseY < height){
+  else if((state === 2 || state === 3) && mouseX > 0 && mouseX < width && mouseY > height/2 && mouseY < height){
     state = 0;
     resetGrid(gx, gy);
   }
 }
 
 function drawGrid(){
+  fill('black');
+  rect(0, 0, width, height);
   stroke(150,219,236);
-    for (i =0; i < gx; i++){
-      for (j = 0; j < gy; j++){
+    for (i = 1; i < gx-1; i++){
+      for (j = 1; j < gy-1; j++){
         rect(i * 20, j * 20, 20, 20);
         fill(137,219,236);
       }
@@ -169,70 +176,80 @@ function keyTyped(){
 }
 
 function directionStateCheck(){
-  if (directionStatePlayerOne === 'up'){
-    if (myGrid[playerOneX][playerOneY-1] === 0){
-      playerOneY--
+  if (playerOneX > 0 && playerOneX < gx-1){
+    if (directionStatePlayerOne === 'up'){
+      if (myGrid[playerOneX][playerOneY-1] === 0){
+        playerOneY--
+      }
+      else{
+        state = 3
+      }
     }
-    else{
-      state = 3
+    else if (directionStatePlayerOne === 'left'){
+      if (myGrid[playerOneX-1][playerOneY] === 0){
+        playerOneX--
+      }
+      else{
+        state = 3
+      }
+    }
+    else if (directionStatePlayerOne === 'down'){
+      if (myGrid[playerOneX][playerOneY+1] === 0){
+        playerOneY++
+      }
+      else{
+        state = 3
+      }
+    }
+    else if (directionStatePlayerOne === 'right'){
+      if (myGrid[playerOneX+1][playerOneY] === 0){
+        playerOneX++
+      }
+      else{
+        state = 3
+      }
     }
   }
-  else if (directionStatePlayerOne === 'left'){
-    if (myGrid[playerOneX-1][playerOneY] === 0){
-      playerOneX--
-    }
-    else{
-      state = 3
-    }
-  }
-  else if (directionStatePlayerOne === 'right'){
-    if (myGrid[playerOneX+1][playerOneY] === 0){
-      playerOneX++
-    }
-    else{
-      state = 3
-    }
-  }
-  else if (directionStatePlayerOne === 'down'){
-    if (myGrid[playerOneX][playerOneY+1] === 0){
-      playerOneY++
-    }
-    else{
-      state = 3
-    }
+  else{
+    state = 3
   }
 
-  if (directionStatePlayerTwo === 'left'){
-    if (myGrid[playerTwoX-1][playerTwoY] === 0){
-      playerTwoX--
+  if(playerTwoX > 0 && playerTwoX < gx-1){
+    if (directionStatePlayerTwo === 'up'){
+      if (myGrid[playerTwoX][playerTwoY-1] === 0){
+        playerTwoY--
+      }
+      else{
+        state = 2
+      }
     }
-    else{
-      state = 2
+    else if (directionStatePlayerTwo === 'left'){
+      if (myGrid[playerTwoX-1][playerTwoY] === 0){
+        playerTwoX--
+      }
+      else{
+        state = 2
+      }
+    }
+    else if (directionStatePlayerTwo === 'down'){
+      if (myGrid[playerTwoX][playerTwoY+1] === 0){
+        playerTwoY++
+      }
+      else{
+        state = 2
+      }
+    }
+    else if (directionStatePlayerTwo === 'right'){
+      if (myGrid[playerTwoX+1][playerTwoY] === 0){
+        playerTwoX++
+      }
+      else{
+        state = 2
+      }
     }
   }
-  else if (directionStatePlayerTwo === 'right'){
-    if (myGrid[playerTwoX+1][playerTwoY] === 0){
-      playerTwoX++
-    }
-    else{
-      state = 2
-    }
-  }
-  else if (directionStatePlayerTwo === 'up'){
-    if (myGrid[playerTwoX][playerTwoY-1] === 0){
-      playerTwoY--
-    }
-    else{
-      state = 2
-    }
-  }
-  else if (directionStatePlayerTwo === 'down'){
-    if (myGrid[playerTwoX][playerTwoY+1] === 0){
-      playerTwoY++
-    }
-    else{
-      state = 2
-    }
+  else{
+    state = 2
   }
 }
 
