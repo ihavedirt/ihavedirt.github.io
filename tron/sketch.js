@@ -9,7 +9,7 @@ let myFont;
 let myGrid;
 let	gx = 22;//grid x and y
 let gy = 22;
-let state = 0;//0 = lobby, 1 = game, 2 = red win screen, 3 = blue win screen
+let state = 0;//0 = lobby, 1 = game, 2 = Yellow win screen, 3 = Red win screen
 let directionStatePlayerOne;
 let directionStatePlayerTwo;
 let timer = 0;
@@ -25,11 +25,11 @@ function preload(){
 }
 
 function setup(){
-  playerOneX = 1;//red player spawn
+  playerOneX = 1;//Yellow player spawn
   playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
 
-  playerTwoX = gx-2;//blue player spawn
+  playerTwoX = gx-2;//Red player spawn
   playerTwoY = gy-2;
   directionStatePlayerTwo = random(['left', 'up']);
 
@@ -52,30 +52,41 @@ function gameState(){//depending on the state of the game, the display will chan
   }
   else if(state === 1){
     myGrid[playerOneX][playerOneY] = 1;
-  	fill(250, 157, 0);
+    fill(225, 134, 66);
   	rect(playerOneX * 20, playerOneY * 20, 20, 20);
     
     myGrid[playerTwoX][playerTwoY] = 2;
-  	fill(0, 104, 132);
+    fill(195, 54, 44);
   	rect(playerTwoX * 20, playerTwoY * 20, 20, 20);
   }
   else if (state === 2){
   	end('Yellow');
   }
   else if (state === 3){
-  	end('Blue');
+  	end('Red');
   }
 }
 
 function end(player){
-  fill('maroon');
-  rect(0, 0, width, height/2);
-  
-  fill('red');
-  rect(0, height/2, width, height);
+  if (player === 'Yellow'){
+    fill(244, 220, 181);
+    rect(0, 0, width, height/2);
+    
+    fill(255, 134, 66);
+    rect(0, height/2, width, height);
 
+    fill('black');
+  }
+  else{
+    fill(38, 7, 7);
+    rect(0, 0, width, height/2);
+    
+    fill(114, 10, 10);
+    rect(0, height/2, width, height);
+
+    fill('black');
+  }
   noStroke();
-  fill(player);
   textFont(myFont);
   textSize(30);
   textAlign(CENTER);
@@ -103,11 +114,11 @@ function generateGrid(gx, gy){//generates array via nested loop//code is credite
 }
 
 function resetGrid(gx, gy){//resets grid
-  playerOneX = 1;//red player spawn
+  playerOneX = 1;//Yellow player spawn
   playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
   
-  playerTwoX = gx-2;//blue player spawn
+  playerTwoX = gx-2;//Red player spawn
   playerTwoY = gy-2;
   directionStatePlayerTwo = random(['left', 'up']);
 
@@ -153,13 +164,13 @@ function mouseClicked(){//if start button clicked, draw grid and start game
 }
 
 function drawGrid(){
-  fill('black');
+  fill(129, 108, 91);
   rect(0, 0, width, height);
-  stroke(150,219,236);
+  stroke(129, 109, 91);
     for (i = 1; i < gx-1; i++){
       for (j = 1; j < gy-1; j++){
         rect(i * 20, j * 20, 20, 20);
-        fill(137,219,236);
+        fill(244, 220, 181);
       }
     }
 }
@@ -176,7 +187,7 @@ function keyTyped(){
 }
 
 function directionStateCheck(){
-  if (playerOneX > 0 && playerOneX < gx-1){
+  if (playerOneX > 0 && playerOneX < gx-1 && playerOneY > 0 && playerOneY < gy-1){
     if (directionStatePlayerOne === 'up'){
       if (myGrid[playerOneX][playerOneY-1] === 0){
         playerOneY--
@@ -214,7 +225,7 @@ function directionStateCheck(){
     state = 3
   }
 
-  if(playerTwoX > 0 && playerTwoX < gx-1){
+  if(playerTwoX > 0 && playerTwoX < gx-1 && playerTwoY > 0 && playerTwoY < gy-1){
     if (directionStatePlayerTwo === 'up'){
       if (myGrid[playerTwoX][playerTwoY-1] === 0){
         playerTwoY--
