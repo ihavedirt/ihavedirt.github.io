@@ -23,13 +23,7 @@ function preload(){
 
 function setup(){
   //start by making grid and setting starting pos of players
-  playerOneX = 1;//Orange player spawn
-  playerOneY = 1;
-  directionStatePlayerOne = random(['right', 'down']);
-
-  playerTwoX = gx-2;//Red player spawn
-  playerTwoY = gy-2;
-  directionStatePlayerTwo = random(['left', 'up']);
+  resetPos();
 
   createCanvas(20 * gx + 1, 20 * gy + 1);
   myGrid = generateGrid(gy, gx);
@@ -39,7 +33,7 @@ function draw(){
   //gamestates as well as looping the movement
   timer = millis();
   gameState();
-  if (state === 1 && timer - lastTimer >= 200) {
+  if (state === 1 && timer - lastTimer >= 100) {
     directionStateCheck();
     lastTimer = timer;
   }
@@ -128,8 +122,7 @@ function generateGrid(gx, gy){
   return array;
 }
 
-function resetGrid(gx, gy){
-  //resets grid
+function resetPos(){
   playerOneX = 1;//Orange player spawn
   playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
@@ -137,6 +130,11 @@ function resetGrid(gx, gy){
   playerTwoX = gx-2;//Red player spawn
   playerTwoY = gy-2;
   directionStatePlayerTwo = random(['left', 'up']);
+}
+
+function resetGrid(gx, gy){
+  //resets grid
+  resetPos();
 
   //nested loop to shift all elements and push 0 again
 	for (let i = 0; i < gy; i++){
