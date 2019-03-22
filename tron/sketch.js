@@ -9,7 +9,7 @@ let myFont;
 let myGrid;
 let	gx = 22;//grid x and y
 let gy = 22;
-let state = 0;//0 = lobby, 1 = game, 2 = Yellow win screen, 3 = Red win screen
+let state = 0;//0 = lobby, 1 = game, 2 = Orange win screen, 3 = Red win screen
 let directionStatePlayerOne;
 let directionStatePlayerTwo;
 let timer = 0;
@@ -25,7 +25,7 @@ function preload(){
 }
 
 function setup(){
-  playerOneX = 1;//Yellow player spawn
+  playerOneX = 1;//Orange player spawn
   playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
 
@@ -60,7 +60,7 @@ function gameState(){//depending on the state of the game, the display will chan
   	rect(playerTwoX * 20, playerTwoY * 20, 20, 20);
   }
   else if (state === 2){
-  	end('Yellow');
+  	end('Orange');
   }
   else if (state === 3){
   	end('Red');
@@ -68,21 +68,23 @@ function gameState(){//depending on the state of the game, the display will chan
 }
 
 function end(player){
-  if (player === 'Yellow'){
+  fill(129, 108, 91);
+  rect(0, 0, width, height);
+  if (player === 'Orange'){
     fill(244, 220, 181);
-    rect(0, 0, width, height/2);
+    rect(5, 5, width-10, height/2);
     
     fill(255, 134, 66);
-    rect(0, height/2, width, height);
+    rect(5, height/2, width-10, height/2-5);
 
     fill('black');
   }
   else{
-    fill(38, 7, 7);
-    rect(0, 0, width, height/2);
+    fill(244, 220, 181);
+    rect(5, 5, width-10, height/2);
     
-    fill(114, 10, 10);
-    rect(0, height/2, width, height);
+    fill(195, 54, 44);
+    rect(5, height/2, width-10, height/2-5);
 
     fill('black');
   }
@@ -91,12 +93,11 @@ function end(player){
   textSize(30);
   textAlign(CENTER);
 
-  text('Gameover, Player ' + player + ' Won', width/2, height/2 + 7);
+  text('Gameover, ' + player + ' Won!', width/2, height/2 + 7);
 
   textSize(20);
   fill('black');
   text('Restart', width/2, height/4);
-
   text('Main Menu', width/2, height - height/4);
 }
 	
@@ -114,7 +115,7 @@ function generateGrid(gx, gy){//generates array via nested loop//code is credite
 }
 
 function resetGrid(gx, gy){//resets grid
-  playerOneX = 1;//Yellow player spawn
+  playerOneX = 1;//Orange player spawn
   playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
   
@@ -131,16 +132,18 @@ function resetGrid(gx, gy){//resets grid
 }
 
 function startScreen(){//start screen display
-  noStroke();
+  // noStroke();
+  strokeWeight(4);
+  stroke(129, 108, 91);
   frameRate(100);
   
-  fill(145, 39, 143);
+  fill(244, 220, 181);
   rect(0, 0, width, height);
   
-  fill(110, 0, 108);
+  fill(195, 54, 44);
   rect(0, 300, width, 80);
   
-  fill(204, 204, 204);
+  fill('black');
   textFont(myFont);
   textSize(70);
   textAlign(LEFT);
@@ -150,6 +153,7 @@ function startScreen(){//start screen display
 function mouseClicked(){//if start button clicked, draw grid and start game
 	if (state === 0 && mouseX > 20 && mouseX < 210 && mouseY > 260 && mouseY < 330){
     state = 1;
+    strokeWeight(2);
     drawGrid();
   }
   else if((state === 2 || state === 3) && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height/2){
