@@ -7,6 +7,7 @@
 
 let myFont;
 let myGrid;
+let music;
 let	gx = 22;//grid x and y
 let gy = 22;
 let state = 0;//0 = lobby, 1 = game, 2 = Orange win screen, 3 = Red win screen
@@ -19,14 +20,15 @@ let direcOut = ['up', 'left', 'down', 'right'];
 
 function preload(){
   myFont = loadFont('assets/myFont.ttf');
+  music = loadSound('assets/music1.mp3');
 }
 
 function setup(){
   //start by making grid and setting starting pos of players
   resetPos();
-
   createCanvas(20 * gx + 1, 20 * gy + 1);
   myGrid = generateGrid(gy, gx);
+  music.play();
 }
 
 function draw(){
