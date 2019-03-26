@@ -12,9 +12,14 @@
 let myFont;
 let myGrid;
 let backgroundMusic, moveSound, clickSound, gameoverSound;
-let	gx = 25;//grid x and y
+
+//grid x and y
+let	gx = 25;
 let gy = 25;
-let state = 0;//0 = lobby, 1 = game, 2 = Orange win screen, 3 = Red win screen
+
+//0 = lobby, 1 = game, 2 = Orange win screen, 3 = Red win screen
+let state = 0;
+
 let directionStatePlayerOne, directionStatePlayerTwo;
 let timer = 0;
 let lastTimer = 0;
@@ -135,11 +140,13 @@ function generateGrid(gx, gy){
 }
 
 function resetPos(){
-  playerOneX = 1;//Orange player spawn
+  //Orange player spawn
+  playerOneX = 1;
   playerOneY = 1;
   directionStatePlayerOne = random(['right', 'down']);
   
-  playerTwoX = gx-2;//Red player spawn
+  //Red player spawn
+  playerTwoX = gx-2;
   playerTwoY = gy-2;
   directionStatePlayerTwo = random(['left', 'up']);
 }
