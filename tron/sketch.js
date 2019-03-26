@@ -1,15 +1,19 @@
 // Tron
 // David Baik
-// Today
+// march 25th, 2019
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// used arrays to create a grid for elements and visual grid
+// used arrays for other purposes such as matching the key input to a direction
+// added sound
+// used millis(); to create a timer that resets to actually move the players
+// fully functional and half decent looking UI :D
 
 let myFont;
 let myGrid;
-let music;
-let	gx = 22;//grid x and y
-let gy = 22;
+let backgroundMusic, moveSound, clickSound, gameoverSound;
+let	gx = 25;//grid x and y
+let gy = 25;
 let state = 0;//0 = lobby, 1 = game, 2 = Orange win screen, 3 = Red win screen
 let directionStatePlayerOne, directionStatePlayerTwo;
 let timer = 0;
@@ -20,7 +24,10 @@ let direcOut = ['up', 'left', 'down', 'right'];
 
 function preload(){
   myFont = loadFont('assets/myFont.ttf');
-  music = loadSound('assets/music1.mp3');
+  backgroundMusic = loadSound('assets/music3.wav');
+  moveSound = loadSound('assets/move.wav');
+  clickSound = loadSound('assets/click.mp3');
+  gameoverSound = loadSound('assets/gameover.wav');
 }
 
 function setup(){
@@ -28,7 +35,12 @@ function setup(){
   resetPos();
   createCanvas(20 * gx + 1, 20 * gy + 1);
   myGrid = generateGrid(gy, gx);
-  music.play();
+  backgroundMusic.setVolume(0.2);
+  moveSound.setVolume(0.01);
+  gameoverSound.setVolume(0.1);
+  clickSound.setVolume(0.5);
+  backgroundMusic.loop = true;
+  backgroundMusic.play();
 }
 
 function draw(){
@@ -36,6 +48,7 @@ function draw(){
   timer = millis();
   gameState();
   if (state === 1 && timer - lastTimer >= 100) {
+    moveSound.play();
     directionStateCheck();
     lastTimer = timer;
   }
@@ -74,26 +87,15 @@ function end(player){
   rect(0, 0, width, height);
   if (player === 'Orange'){
     //player orange wins
-    fill(244, 220, 181);
-    rect(5, 5, width-10, height/2);
-    
-    fill(255, 134, 66);
-    rect(5, height/2, width-10, height/2-5);
+    endDisplay('#f4dcb5', '#ff8642');
   }
   else if(player === 'Red'){
     //player red wins
-    fill(244, 220, 181);
-    rect(5, 5, width-10, height/2);
-    
-    fill(195, 54, 44);
-    rect(5, height/2, width-10, height/2-5);
+    endDisplay('#f4dcb5', '#c3362c');
   }
   else{
-    fill(255, 134, 66);
-    rect(5, 5, width-10, height/2);
-    
-    fill(195, 54, 44);
-    rect(5, height/2, width-10, height/2-5);
+    //tie
+    endDisplay('#ff8642', '#c3362c');
   }
   //text for both screens
   fill('black');
@@ -110,6 +112,14 @@ function end(player){
   text('Main Menu', width/2, height - height/4);
 }
 	
+function endDisplay(top, bottom){
+  //end display boxes with colour
+  fill(top);
+  rect(5, 5, width-10, height/2);
+
+  fill(bottom);
+  rect(5, height/2, width-10, height/2-5);
+}
 
 function generateGrid(gx, gy){
   //generates array via nested loop//code is credited Mr. Schellenberg, but I fully understand the code
@@ -135,10 +145,9 @@ function resetPos(){
 }
 
 function resetGrid(gx, gy){
-  //resets grid
+  //resets grid and positions
   resetPos();
 
-  //nested loop to shift all elements and push 0 again
 	for (let i = 0; i < gy; i++){
   	for (let j = 0; j < gx; j++){
       myGrid[i].shift();
@@ -169,18 +178,21 @@ function startScreen(){
 function mouseClicked(){
 	if (state === 0 && mouseX > 20 && mouseX < 210 && mouseY > 260 && mouseY < 330){
     //if start button clicked, draw grid and start game
+    clickSound.play();
     state = 1;
     strokeWeight(2);
     drawGrid();
   }
   else if((state === 2 || state === 3 || state === 4) && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height/2){
     //restarts game after gameover
+    clickSound.play();
     state = 1;
     resetGrid(gx, gy);
     drawGrid();
   }
   else if((state === 2 || state === 3 || state === 4) && mouseX > 0 && mouseX < width && mouseY > height/2 && mouseY < height){
     //back to menu after gameover
+    clickSound.play();
     state = 0;
     resetGrid(gx, gy);
   }
@@ -200,7 +212,9 @@ function drawGrid(){
 }
 
 function tieCheck(){
+  //checks for tie
   if (playerOneX === playerTwoX && playerOneY ===playerTwoY){
+    gameoverSound.play();
     state = 4;
   }
 }
@@ -225,6 +239,7 @@ function directionStateCheck(){
         playerOneY--
       }
       else{
+        gameoverSound.play();
         state = 3
       }
     }
@@ -233,6 +248,7 @@ function directionStateCheck(){
         playerOneX--
       }
       else{
+        gameoverSound.play();
         state = 3
       }
     }
@@ -241,6 +257,7 @@ function directionStateCheck(){
         playerOneY++
       }
       else{
+        gameoverSound.play();
         state = 3
       }
     }
@@ -249,11 +266,13 @@ function directionStateCheck(){
         playerOneX++
       }
       else{
+        gameoverSound.play();
         state = 3
       }
     }
   }
   else{
+    gameoverSound.play();
     state = 3
   }
 
@@ -264,6 +283,7 @@ function directionStateCheck(){
         playerTwoY--
       }
       else{
+        gameoverSound.play();
         state = 2
       }
     }
@@ -272,6 +292,7 @@ function directionStateCheck(){
         playerTwoX--
       }
       else{
+        gameoverSound.play();
         state = 2
       }
     }
@@ -280,6 +301,7 @@ function directionStateCheck(){
         playerTwoY++
       }
       else{
+        gameoverSound.play();
         state = 2
       }
     }
@@ -288,11 +310,13 @@ function directionStateCheck(){
         playerTwoX++
       }
       else{
+        gameoverSound.play();
         state = 2
       }
     }
   }
   else{
+    gameoverSound.play();
     state = 2
   }
 }
