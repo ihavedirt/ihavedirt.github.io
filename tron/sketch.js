@@ -230,10 +230,10 @@ function keyTyped(){
   //checks the input of key and matches a direction with it
   if (state === 1){
   	if (keyInPlayerOne.indexOf(key) > -1){
-      directionStatePlayerOne = direcOut[keyInPlayerOne.indexOf(key)]
+      directionStatePlayerOne = direcOut[keyInPlayerOne.indexOf(key)];
     }
     if (keyInPlayerTwo.indexOf(key) > -1){
-      directionStatePlayerTwo = direcOut[keyInPlayerTwo.indexOf(key)]
+      directionStatePlayerTwo = direcOut[keyInPlayerTwo.indexOf(key)];
     }
   }
 }
@@ -243,88 +243,88 @@ function directionStateCheck(){
   if (playerOneX > 0 && playerOneX < gx-1 && playerOneY > 0 && playerOneY < gy-1){
     if (directionStatePlayerOne === 'up'){
       if (myGrid[playerOneX][playerOneY-1] === 0){
-        playerOneY--
+        playerOneY--;
       }
       else{
         gameoverSound.play();
-        state = 3
+        state = 3;
       }
     }
     else if (directionStatePlayerOne === 'left'){
       if (myGrid[playerOneX-1][playerOneY] === 0){
-        playerOneX--
+        playerOneX--;
       }
       else{
         gameoverSound.play();
-        state = 3
+        state = 3;
       }
     }
     else if (directionStatePlayerOne === 'down'){
       if (myGrid[playerOneX][playerOneY+1] === 0){
-        playerOneY++
+        playerOneY++;
       }
       else{
         gameoverSound.play();
-        state = 3
+        state = 3;
       }
     }
     else if (directionStatePlayerOne === 'right'){
       if (myGrid[playerOneX+1][playerOneY] === 0){
-        playerOneX++
+        playerOneX++;
       }
       else{
         gameoverSound.play();
-        state = 3
+        state = 3;
       }
     }
   }
   else{
     gameoverSound.play();
-    state = 3
+    state = 3;
   }
 
   if(playerTwoX > 0 && playerTwoX < gx-1 && playerTwoY > 0 && playerTwoY < gy-1){
     //lose condition as well as movement for player red
     if (directionStatePlayerTwo === 'up'){
       if (myGrid[playerTwoX][playerTwoY-1] === 0){
-        playerTwoY--
+        playerTwoY--;
       }
       else{
         gameoverSound.play();
-        state = 2
+        state = 2;
       }
     }
     else if (directionStatePlayerTwo === 'left'){
       if (myGrid[playerTwoX-1][playerTwoY] === 0){
-        playerTwoX--
+        playerTwoX--;
       }
       else{
         gameoverSound.play();
-        state = 2
+        state = 2;
       }
     }
     else if (directionStatePlayerTwo === 'down'){
       if (myGrid[playerTwoX][playerTwoY+1] === 0){
-        playerTwoY++
+        playerTwoY++;
       }
       else{
         gameoverSound.play();
-        state = 2
+        state = 2;
       }
     }
     else if (directionStatePlayerTwo === 'right'){
       if (myGrid[playerTwoX+1][playerTwoY] === 0){
-        playerTwoX++
+        playerTwoX++;
       }
       else{
         gameoverSound.play();
-        state = 2
+        state = 2;
       }
     }
   }
   else{
     gameoverSound.play();
-    state = 2
+    state = 2;
   }
 }
 
