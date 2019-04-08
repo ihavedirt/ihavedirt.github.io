@@ -5,31 +5,54 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let gridY = 100;
-let gridX = 12;
+class cell {
+  constructor(){
+    this.width = 15;
+    this.height = 40;
+    this.gridY = 5;
+    this.gridX = 50;
+  }
+}
+
+class drum {
+  constructor(){
+    this.soundFile;
+  }
+}
+
 let myGrid;
+let cellVar = new cell();
 
-class cellSize {
-  
 
+
+
+
+
+function preload(){
 }
 
 function setup() {
-  myGrid = createGrid(gridX, gridY)
+  myGrid = createGrid(cellVar.gridX, cellVar.gridY)
   createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
-  drawGrid(gridX, gridY);
-  rect(0, 0, 400, 40*gridX);
+  drawGrid(cellVar.gridX, cellVar.gridY);
+  fill(255);
+  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width, 100);
 }
+
+
+
+
+
 
 
 function createGrid(X, Y){
   let array = [];
-  for (i = 0; i < Y; i++){
+  for (let i = 0; i < X; i++){
     let rows = [];
-    for (j = 0; j < X; j++){
+    for (let j = 0; j < Y; j++){
       rows.push(0);
     }
     array.push(rows);
@@ -38,22 +61,29 @@ function createGrid(X, Y){
 }
 
 function drawGrid(X, Y){
-  push();
-  translate(400, 0);
   stroke('grey');
-  fill(255);
-  for (i = 0; i < X; i++){
-    for (j = 0; j < Y; j++){
-      rect(j*15, i*40, 15, 40);
+  for (let i = 0; i < X; i++){
+    for (let j = 0; j < Y; j++){
+      if (myGrid[i][j] === 0){
+        fill(255);
+      }
+      else{
+        fill(0);
+      }
+      rect(i*cellVar.width, j*cellVar.height, cellVar.width, cellVar.height);
     }
   }
-  pop();
 }
 
 function mouseClicked(){
-  translate(400, 0);
-  let yVal = floor(mouseY / 40);
-  let xVal = floor(mouseX / 15);
-
-  myGrid[yVal][xVal] = 1;
+  let yVal = floor(mouseY / cellVar.height);
+  let xVal = floor(mouseX / cellVar.width);
+  
+  if (myGrid[xVal][yVal] === 0){
+    myGrid[xVal][yVal] = 1;
+  }
+  else{
+    myGrid[xVal][yVal] = 0;
+  }
+  console.log(myGrid);
 }
