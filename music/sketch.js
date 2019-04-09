@@ -9,19 +9,21 @@ class cell {
   constructor(){
     this.width = 15;
     this.height = 40;
-    this.gridY = 5;
+    this.gridY = 8;
     this.gridX = 50;
   }
 }
 
 class drum {
   constructor(){
-    this.soundFile;
   }
 }
 
 let myGrid;
 let cellVar = new cell();
+let play = true;
+let pushed = 50;
+let timer, lastTimer = 0;
 
 
 
@@ -37,16 +39,35 @@ function setup() {
 }
 
 function draw() {
+  timer = millis();
+  // push();
+  //   translate(pushed, 0);
   drawGrid(cellVar.gridX, cellVar.gridY);
+    if (play && timer - lastTimer >= 100) {
+      movingBar();
+      lastTimer = timer;
+    }
+  // pop();
   fill(255);
-  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width, 100);
+  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width + pushed, 100);
 }
 
 
 
 
 
-
+function movingBar(){
+  let xcord = 0;
+  if (play){
+    if (xcord > cellVar.width*cellVar.gridX){
+        xcord+= 0.1;
+        line(xcord, 0, xcord, cellVar.height*cellVar.gridY);
+    }
+    else{
+      xcord = 0;
+    }
+  }
+}
 
 function createGrid(X, Y){
   let array = [];
