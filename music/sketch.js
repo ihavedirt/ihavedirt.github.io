@@ -10,7 +10,7 @@ class cell {
     this.width = 15;
     this.height = 40;
     this.gridY = 8;
-    this.gridX = 50;
+    this.gridX = 32;
   }
 }
 
@@ -24,8 +24,8 @@ let cellVar = new cell();
 let play = true;
 let pushed = 50;
 let timer, lastTimer = 0;
-
-
+let barXcord
+let note = 8
 
 
 
@@ -34,21 +34,23 @@ function preload(){
 }
 
 function setup() {
-  myGrid = createGrid(cellVar.gridX, cellVar.gridY)
+  myGrid = createGrid(cellVar.gridY, note)
   createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
+  strokeWeight(0.2);
+  stroke('white');
   timer = millis();
-  // push();
-  //   translate(pushed, 0);
-  drawGrid(cellVar.gridX, cellVar.gridY);
+  push();
+    translate(pushed, 0);
+    drawGrid(cellVar.gridX, cellVar.gridY);
     if (play && timer - lastTimer >= 100) {
       movingBar();
       lastTimer = timer;
     }
-  // pop();
-  fill(255);
+  pop();
+  fill('grey');
   rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width + pushed, 100);
 }
 
@@ -57,24 +59,26 @@ function draw() {
 
 
 function movingBar(){
-  let xcord = 0;
-  if (play){
-    if (xcord > cellVar.width*cellVar.gridX){
-        xcord+= 0.1;
-        line(xcord, 0, xcord, cellVar.height*cellVar.gridY);
-    }
-    else{
-      xcord = 0;
-    }
+  if (barXcord > cellVar.width*cellVar.gridX){
+      barXcord+= 0.1;
+      line(barXcord, 0, barXcord, cellVar.height*cellVar.gridY);
+  }
+  else{
+    barXcord = 0;
   }
 }
 
-function createGrid(X, Y){
+function createGrid(Y, N){
   let array = [];
-  for (let i = 0; i < X; i++){
+  for (let i = 0; i < Y; i++){
     let rows = [];
-    for (let j = 0; j < Y; j++){
-      rows.push(0);
+    for (let j = 0; j < N; j++){
+      for (let k = 0; k < 4; k++){
+        rows.push(0);
+      }
+      for (let l = 0; l < 4; l++){
+        rows.push(1);
+      }
     }
     array.push(rows);
   }
@@ -82,29 +86,31 @@ function createGrid(X, Y){
 }
 
 function drawGrid(X, Y){
-  stroke('grey');
-  for (let i = 0; i < X; i++){
-    for (let j = 0; j < Y; j++){
+  for (let i = 0; i < Y; i++){
+    for (let j = 0; j < X; j++){
       if (myGrid[i][j] === 0){
-        fill(255);
+        fill(71, 79, 79);
+      }
+      else if(myGrid[i][j] === 1){
+        fill(115, 130, 130);
       }
       else{
-        fill(0);
+        fill('black');
       }
-      rect(i*cellVar.width, j*cellVar.height, cellVar.width, cellVar.height);
+      rect(j*cellVar.width, i*cellVar.height, cellVar.width, cellVar.height);
     }
   }
 }
 
 function mouseClicked(){
   let yVal = floor(mouseY / cellVar.height);
-  let xVal = floor(mouseX / cellVar.width);
+  let xVal = floor((mouseX - pushed) / cellVar.width);
   
-  if (myGrid[xVal][yVal] === 0){
-    myGrid[xVal][yVal] = 1;
+  if (myGrid[yVal][xVal] === 0 || myGrid[yVal][xVal] === 1){
+    myGrid[yVal][xVal] = 3;
   }
   else{
-    myGrid[xVal][yVal] = 0;
+    myGrid[yVal][xVal] = 1;
   }
   console.log(myGrid);
 }
