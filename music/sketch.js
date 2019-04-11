@@ -5,11 +5,14 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+
+// colour palette https://www.colourlovers.com/palette/292482/Terra
+
 class cell {
   constructor(){
     this.width = 15;
     this.height = 40;
-    this.gridY = 8;
+    this.gridY = 6;
     this.gridX = 32;
   }
 }
@@ -19,13 +22,20 @@ class drum {
   }
 }
 
-let myGrid;
+
+
+
+
+let sheet;
 let cellVar = new cell();
-let play = true;
+
+let note = cellVar.gridX / 4;
 let pushed = 50;
 let timer, lastTimer = 0;
-let barXcord
-let note = 8
+
+let barXcord = 0;
+let play = true;
+
 
 
 
@@ -34,38 +44,44 @@ function preload(){
 }
 
 function setup() {
-  myGrid = createGrid(cellVar.gridY, note)
+  frameRate(100);
+  sheet = createGrid(cellVar.gridY, note)
   createCanvas(windowWidth, windowHeight);
+  strokeWeight(0.2);
+  stroke('white');
 }
 
 function draw() {
-  strokeWeight(0.2);
-  stroke('white');
   timer = millis();
   push();
     translate(pushed, 0);
     drawGrid(cellVar.gridX, cellVar.gridY);
-    if (play && timer - lastTimer >= 100) {
-      movingBar();
-      lastTimer = timer;
-    }
+    slider();
   pop();
-  fill('grey');
-  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width + pushed, 100);
+  stuffings();
 }
 
 
 
 
-
-function movingBar(){
-  if (barXcord > cellVar.width*cellVar.gridX){
-      barXcord+= 0.1;
+function slider(){
+  strokeWeight(1);
+  if (play && timer - lastTimer >= 10) {
+    if (barXcord < cellVar.width*cellVar.gridX){
+      barXcord+= 2;
       line(barXcord, 0, barXcord, cellVar.height*cellVar.gridY);
+    } 
+    else{
+      barXcord = 0;
+    }
+    lastTimer = timer;
   }
   else{
     barXcord = 0;
   }
+  if (barXcord < 0){
+    barXcord = 0;
+   }
 }
 
 function createGrid(Y, N){
@@ -88,14 +104,14 @@ function createGrid(Y, N){
 function drawGrid(X, Y){
   for (let i = 0; i < Y; i++){
     for (let j = 0; j < X; j++){
-      if (myGrid[i][j] === 0){
-        fill(71, 79, 79);
+      if (sheet[i][j] === 0){
+        fill(33, 33, 33);
       }
-      else if(myGrid[i][j] === 1){
-        fill(115, 130, 130);
+      else if(sheet[i][j] === 1){
+        fill(50, 50, 50);
       }
       else{
-        fill('black');
+        fill(232,221,203);
       }
       rect(j*cellVar.width, i*cellVar.height, cellVar.width, cellVar.height);
     }
@@ -106,11 +122,36 @@ function mouseClicked(){
   let yVal = floor(mouseY / cellVar.height);
   let xVal = floor((mouseX - pushed) / cellVar.width);
   
-  if (myGrid[yVal][xVal] === 0 || myGrid[yVal][xVal] === 1){
-    myGrid[yVal][xVal] = 3;
+  if (sheet[yVal][xVal] === 0 || sheet[yVal][xVal] === 1){
+    sheet[yVal][xVal] = 3;
+  }
+  else if ((xVal % 8) < 4 && sheet[yVal][xVal] === 3){
+    sheet[yVal][xVal] = 0;
   }
   else{
-    myGrid[yVal][xVal] = 1;
+    sheet[yVal][xVal] = 1;
   }
-  console.log(myGrid);
+  console.log(sheet);
 }
+
+function keyTyped(){
+  if (key === "q"){
+    barXcord = mouseX - pushed;
+  }
+}
+
+function stuffings(){
+  fill(3,22,52);
+  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width + pushed, 60);
+  fill(232,221,203);
+  rect(0, 0, pushed, cellVar.height*cellVar.gridY);
+}
+
+// function player(){
+//   for (let i = 0; i < gridY-1; i++){
+//     for (let j = 0; j < gridX; j++){
+//       //play.sheet[i][j]
+//       }
+//     }
+//   }
+// }
