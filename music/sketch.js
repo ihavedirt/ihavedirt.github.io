@@ -17,13 +17,30 @@ class cell {
   }
 }
 
-class drum {
+class hat {
   constructor(){
   }
 }
 
+class kick {
+  constructor(){
+  }
+}
 
+class clap {
+  constructor(){
+  }
+}
 
+class bass {
+  constructor(){
+  }
+}
+
+class OH {
+  constructor(){
+  }
+}
 
 
 let sheet;
@@ -60,6 +77,9 @@ function draw() {
   pop();
   stuffings();
 }
+
+
+
 
 
 
@@ -105,9 +125,11 @@ function drawGrid(X, Y){
   for (let i = 0; i < Y; i++){
     for (let j = 0; j < X; j++){
       if (sheet[i][j] === 0){
+        //dark
         fill(33, 33, 33);
       }
       else if(sheet[i][j] === 1){
+        //light
         fill(50, 50, 50);
       }
       else{
@@ -141,10 +163,16 @@ function keyTyped(){
 }
 
 function stuffings(){
-  fill(3,22,52);
-  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width + pushed, 60);
-  fill(232,221,203);
+  let underBarDowny = 60;
+
+  fill(3,22,52);//under the bars
+  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width + pushed, underBarDowny);
+  fill(232,221,203);//left most
   rect(0, 0, pushed, cellVar.height*cellVar.gridY);
+  // fill(232,221,203);// big butt
+  // rect(0, cellVar.height*cellVar.gridY + underBarDowny, width, height - cellVar.height*cellVar.gridY);
+  // fill(205,179,128);// bottom cotton
+  // rect(0, cellVar.height*cellVar.gridY + underBarDowny, width, 30);
 }
 
 // function player(){
