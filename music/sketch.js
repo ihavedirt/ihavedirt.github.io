@@ -1,14 +1,18 @@
-// Project Title
-// Your Name
-// Date
+// Tuna
+// David Baik
+// Tomorrow
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// lots of sound stuff i hope
+// 
 
+//need
+
+//want
 
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
-class cell {
+class cellC {
   constructor(){
     this.width = 15;
     this.height = 40;
@@ -17,36 +21,58 @@ class cell {
   }
 }
 
-class hat {
+class hatC {
   constructor(){
+    this.sound;
   }
 }
 
-class kick {
+class clapC {
   constructor(){
+    this.sound;
   }
 }
 
-class clap {
+class rideC {
   constructor(){
+    this.sound;
   }
 }
 
-class bass {
+class snareC {
   constructor(){
+    this.sound;
   }
 }
 
-class OH {
+class kickC {
   constructor(){
+    this.sound;
   }
 }
 
+class g808C {
+  constructor(){
+    this.sound;
+  }
+}
+
+
+
+
+
+
+let hat = new hatC;
+let clap = new clapC;
+let ride = new rideC;
+let snare = new snareC;
+let kick = new kickC;
+let g808 = new g808C;
 
 let sheet;
-let cellVar = new cell();
+let cell = new cellC();
 
-let note = cellVar.gridX / 4;
+let note = cell.gridX / 4;
 let pushed = 50;
 let timer, lastTimer = 0;
 
@@ -57,12 +83,19 @@ let play = true;
 
 
 
+
 function preload(){
+  // hat.sound = loadSound('assets/hat.wav');
+  // clap.sound = loadSound('assets/clap.wav');
+  // ride.sound = loadSound('assets/ride.wav');
+  // snare.sound = loadSound('assets/snare.wav');
+  // kick.sound = loadSound('assets/kick.wav');
+  // g808.sound = loadSound('assets/808.wav');
 }
 
 function setup() {
   frameRate(100);
-  sheet = createGrid(cellVar.gridY, note)
+  sheet = createGrid(cell.gridY, note)
   createCanvas(windowWidth, windowHeight);
   strokeWeight(0.2);
   stroke('white');
@@ -72,8 +105,14 @@ function draw() {
   timer = millis();
   push();
     translate(pushed, 0);
-    drawGrid(cellVar.gridX, cellVar.gridY);
-    slider();
+    drawGrid(cell.gridX, cell.gridY);
+    if (play && timer - lastTimer >= 10) {
+      player();
+      slider();
+    }
+    else{
+      barXcord = 0;
+    }
   pop();
   stuffings();
 }
@@ -83,28 +122,35 @@ function draw() {
 
 
 
-
 function slider(){
+  //visual slider when play
   strokeWeight(1);
-  if (play && timer - lastTimer >= 10) {
-    if (barXcord < cellVar.width*cellVar.gridX){
-      barXcord+= 2;
-      line(barXcord, 0, barXcord, cellVar.height*cellVar.gridY);
-    } 
-    else{
-      barXcord = 0;
-    }
-    lastTimer = timer;
-  }
+  if (barXcord < cell.width*cell.gridX){
+    barXcord+= 2;
+    line(barXcord, 0, barXcord, cell.height*cell.gridY);
+  } 
   else{
     barXcord = 0;
   }
+  lastTimer = timer;
+  }
   if (barXcord < 0){
     barXcord = 0;
-   }
+  }
+
+function player(){
+  //plays 
+  if (play){
+    for (let i = 0; i < cell.gridY; i++){
+      for (let j = 0; j < cell.gridX; j++){
+        sheet[i][j].play;
+      }
+    }
+  }
 }
 
 function createGrid(Y, N){
+  //creates the array
   let array = [];
   for (let i = 0; i < Y; i++){
     let rows = [];
@@ -122,6 +168,7 @@ function createGrid(Y, N){
 }
 
 function drawGrid(X, Y){
+  //draws the grid based on array, with alternating colours
   for (let i = 0; i < Y; i++){
     for (let j = 0; j < X; j++){
       if (sheet[i][j] === 0){
@@ -133,16 +180,17 @@ function drawGrid(X, Y){
         fill(50, 50, 50);
       }
       else{
-        fill(232,221,203);
+        fill(183,178,171);
       }
-      rect(j*cellVar.width, i*cellVar.height, cellVar.width, cellVar.height);
+      rect(j*cell.width, i*cell.height, cell.width, cell.height);
     }
   }
 }
 
 function mouseClicked(){
-  let yVal = floor(mouseY / cellVar.height);
-  let xVal = floor((mouseX - pushed) / cellVar.width);
+  //change value in array based on location clicked
+  let yVal = floor(mouseY / cell.height);
+  let xVal = floor((mouseX - pushed) / cell.width);
   
   if (sheet[yVal][xVal] === 0 || sheet[yVal][xVal] === 1){
     sheet[yVal][xVal] = 3;
@@ -157,29 +205,22 @@ function mouseClicked(){
 }
 
 function keyTyped(){
-  if (key === "q"){
+  //space key sets position of slider
+  if (key === " "){
     barXcord = mouseX - pushed;
   }
 }
 
 function stuffings(){
+  //design stuff
   let underBarDowny = 60;
 
   fill(3,22,52);//under the bars
-  rect(0, cellVar.gridY*cellVar.height, cellVar.gridX*cellVar.width + pushed, underBarDowny);
+  rect(0, cell.gridY*cell.height, cell.gridX*cell.width + pushed, underBarDowny);
   fill(232,221,203);//left most
-  rect(0, 0, pushed, cellVar.height*cellVar.gridY);
-  // fill(232,221,203);// big butt
-  // rect(0, cellVar.height*cellVar.gridY + underBarDowny, width, height - cellVar.height*cellVar.gridY);
+  rect(0, 0, pushed, cell.height*cell.gridY);
+  // fill(232,221,203);// butt
+  // rect(0, cell.height*cell.gridY + underBarDowny, width, height - cell.height*cell.gridY);
   // fill(205,179,128);// bottom cotton
-  // rect(0, cellVar.height*cellVar.gridY + underBarDowny, width, 30);
+  // rect(0, cell.height*cell.gridY + underBarDowny, width, 30);
 }
-
-// function player(){
-//   for (let i = 0; i < gridY-1; i++){
-//     for (let j = 0; j < gridX; j++){
-//       //play.sheet[i][j]
-//       }
-//     }
-//   }
-// }
