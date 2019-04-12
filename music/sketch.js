@@ -26,9 +26,9 @@ class Instrument {
     this.sound;
   }
 
-  amp(){
+  // amp(){
 
-  }
+  // }
 }
 
 class Button {
@@ -61,6 +61,7 @@ let timer, lastTimer = 0;
 let barXcord = 0;
 let playState = true;
 let inst;
+
 
 
 
@@ -107,6 +108,7 @@ function draw() {
 
 
 
+
 function slider(){
   //visual slider when playState
   strokeWeight(1);
@@ -127,7 +129,7 @@ function player(){
   //plays the bars
   let xVal = floor(barXcord / cell.width);
   for (let i = 0; i < cell.gridY; i++){
-    bars[i][xVal].play;
+    // bars[i][xVal].play();
   }
 }
 
