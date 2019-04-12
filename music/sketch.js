@@ -12,7 +12,7 @@
 
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
-class cellC {
+class Cell {
   constructor(){
     this.width = 15;
     this.height = 40;
@@ -21,40 +21,22 @@ class cellC {
   }
 }
 
-class hatC {
+class Instrument {
   constructor(){
     this.sound;
+  }
+
+  amp(){
+
   }
 }
 
-class clapC {
-  constructor(){
-    this.sound;
-  }
+class Button {
+
 }
 
-class rideC {
-  constructor(){
-    this.sound;
-  }
-}
+class Slider {
 
-class snareC {
-  constructor(){
-    this.sound;
-  }
-}
-
-class kickC {
-  constructor(){
-    this.sound;
-  }
-}
-
-class g808C {
-  constructor(){
-    this.sound;
-  }
 }
 
 
@@ -62,41 +44,44 @@ class g808C {
 
 
 
-let hat = new hatC;
-let clap = new clapC;
-let ride = new rideC;
-let snare = new snareC;
-let kick = new kickC;
-let g808 = new g808C;
+let hat = new Instrument;
+let clap = new Instrument;
+let ride = new Instrument;
+let snare = new Instrument;
+let kick = new Instrument;
+let g808 = new Instrument;
 
-let sheet;
-let cell = new cellC();
+let bars;
+let cell = new Cell();
 
 let note = cell.gridX / 4;
 let pushed = 50;
 let timer, lastTimer = 0;
 
 let barXcord = 0;
-let play = true;
-
-
+let playState = true;
+let inst;
 
 
 
 
 function preload(){
-  // hat.sound = loadSound('assets/hat.wav');
-  // clap.sound = loadSound('assets/clap.wav');
-  // ride.sound = loadSound('assets/ride.wav');
-  // snare.sound = loadSound('assets/snare.wav');
-  // kick.sound = loadSound('assets/kick.wav');
-  // g808.sound = loadSound('assets/808.wav');
+  hat.sound = loadSound('assets/hat.wav');
+  clap.sound = loadSound('assets/clap.wav');
+  ride.sound = loadSound('assets/ride.wav');
+  snare.sound = loadSound('assets/snare.wav');
+  kick.sound = loadSound('assets/kick.wav');
+  g808.sound = loadSound('assets/808.wav');
 }
 
 function setup() {
   frameRate(100);
-  sheet = createGrid(cell.gridY, note)
+
+  inst = [hat.sound, clap.sound, ride.sound, snare.sound, kick.sound, g808.sound];
+  bars = createGrid(cell.gridY, note)
+
   createCanvas(windowWidth, windowHeight);
+
   strokeWeight(0.2);
   stroke('white');
 }
@@ -106,7 +91,7 @@ function draw() {
   push();
     translate(pushed, 0);
     drawGrid(cell.gridX, cell.gridY);
-    if (play && timer - lastTimer >= 10) {
+    if (playState && timer - lastTimer >= 10) {
       player();
       slider();
     }
@@ -123,7 +108,7 @@ function draw() {
 
 
 function slider(){
-  //visual slider when play
+  //visual slider when playState
   strokeWeight(1);
   if (barXcord < cell.width*cell.gridX){
     barXcord+= 2;
@@ -139,13 +124,10 @@ function slider(){
   }
 
 function player(){
-  //plays 
-  if (play){
-    for (let i = 0; i < cell.gridY; i++){
-      for (let j = 0; j < cell.gridX; j++){
-        sheet[i][j].play;
-      }
-    }
+  //plays the bars
+  let xVal = floor(barXcord / cell.width);
+  for (let i = 0; i < cell.gridY; i++){
+    bars[i][xVal].play;
   }
 }
 
@@ -171,11 +153,11 @@ function drawGrid(X, Y){
   //draws the grid based on array, with alternating colours
   for (let i = 0; i < Y; i++){
     for (let j = 0; j < X; j++){
-      if (sheet[i][j] === 0){
+      if (bars[i][j] === 0){
         //dark
         fill(33, 33, 33);
       }
-      else if(sheet[i][j] === 1){
+      else if(bars[i][j] === 1){
         //light
         fill(50, 50, 50);
       }
@@ -192,16 +174,16 @@ function mouseClicked(){
   let yVal = floor(mouseY / cell.height);
   let xVal = floor((mouseX - pushed) / cell.width);
   
-  if (sheet[yVal][xVal] === 0 || sheet[yVal][xVal] === 1){
-    sheet[yVal][xVal] = 3;
+  if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
+    bars[yVal][xVal] = inst[yVal];
   }
-  else if ((xVal % 8) < 4 && sheet[yVal][xVal] === 3){
-    sheet[yVal][xVal] = 0;
+  else if ((xVal % 8) < 4){
+    bars[yVal][xVal] = 0;
   }
   else{
-    sheet[yVal][xVal] = 1;
+    bars[yVal][xVal] = 1;
   }
-  console.log(sheet);
+  console.log(bars);
 }
 
 function keyTyped(){
@@ -219,8 +201,8 @@ function stuffings(){
   rect(0, cell.gridY*cell.height, cell.gridX*cell.width + pushed, underBarDowny);
   fill(232,221,203);//left most
   rect(0, 0, pushed, cell.height*cell.gridY);
-  // fill(232,221,203);// butt
+  // fill(50, 50, 50);// butt
   // rect(0, cell.height*cell.gridY + underBarDowny, width, height - cell.height*cell.gridY);
-  // fill(205,179,128);// bottom cotton
-  // rect(0, cell.height*cell.gridY + underBarDowny, width, 30);
+  // fill(232,221,203);// low cotton
+  // rect(0, cell.height*cell.gridY + underBarDowny, width, 10);
 }
