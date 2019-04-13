@@ -129,7 +129,7 @@ function player(){
   //plays the bars
   let xVal = floor(barXcord / cell.width);
   for (let i = 0; i < cell.gridY; i++){
-    // bars[i][xVal].play();
+    // bars[i][xVal].play(); 
   }
 }
 
