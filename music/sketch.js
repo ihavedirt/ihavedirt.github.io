@@ -92,7 +92,7 @@ function draw() {
   push();
     translate(pushed, 0);
     drawGrid(cell.gridX, cell.gridY);
-    if (playState && timer - lastTimer >= 10) {
+    if (playState && timer - lastTimer > 5) {
       player();
       slider();
     }
@@ -129,8 +129,14 @@ function player(){
   //plays the bars
   let xVal = floor(barXcord / cell.width);
   for (let i = 0; i < cell.gridY; i++){
-    // bars[i][xVal].play(); 
+    if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1){
+      bars[i][xVal].play(); 
+    }
   }
+}
+
+function player(){
+
 }
 
 function createGrid(Y, N){
