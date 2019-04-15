@@ -39,7 +39,26 @@ class Slider {
 
 }
 
+class Bar {
+  constructor(){
+    this.xcord = 0;
+  }
 
+  move(windWidth, windHeight, bpm){
+  //visual slider when playState
+    strokeWeight(1);
+    if (this.xcord < windWidth){
+      this.xcord+= bpm;
+      line(this.xcord, 0, this.xcord, windHeight);
+    } 
+    else{
+      this.xcord = 0;
+    }
+    if (this.xcord < 0){
+      this.xcord = 0;
+    }
+  }
+}
 
 
 
@@ -58,10 +77,9 @@ let note = cell.gridX / 4;
 let pushed = 50;
 let timer, lastTimer = 0;
 
-let barXcord = 0;
 let playState = true;
 let inst;
-
+let smallBar = new Bar;
 
 
 
@@ -92,13 +110,14 @@ function draw() {
   push();
     translate(pushed, 0);
     drawGrid(cell.gridX, cell.gridY);
-    if (playState && timer - lastTimer > 5) {
+    if (playState && timer - lastTimer > 10) {
       player();
-      slider();
+      smallBar.move(cell.width*cell.gridX, cell.height*cell.gridY, 3);
     }
     else{
-      barXcord = 0;
+      smallBar.xcord = 0;
     }
+    lastTimer = timer;
   pop();
   stuffings();
 }
@@ -108,35 +127,14 @@ function draw() {
 
 
 
-
-function slider(){
-  //visual slider when playState
-  strokeWeight(1);
-  if (barXcord < cell.width*cell.gridX){
-    barXcord+= 2;
-    line(barXcord, 0, barXcord, cell.height*cell.gridY);
-  } 
-  else{
-    barXcord = 0;
-  }
-  lastTimer = timer;
-  }
-  if (barXcord < 0){
-    barXcord = 0;
-  }
-
 function player(){
   //plays the bars
-  let xVal = floor(barXcord / cell.width);
+  let xVal = floor(smallBar.xcord / cell.width);
   for (let i = 0; i < cell.gridY; i++){
     if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1){
       bars[i][xVal].play(); 
     }
   }
-}
-
-function player(){
-
 }
 
 function createGrid(Y, N){
@@ -197,7 +195,7 @@ function mouseClicked(){
 function keyTyped(){
   //space key sets position of slider
   if (key === " "){
-    barXcord = mouseX - pushed;
+    smallBar.xcord = mouseX - pushed;
   }
 }
 
