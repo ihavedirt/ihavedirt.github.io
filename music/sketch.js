@@ -29,6 +29,8 @@ class Instrument {
   // amp(){
 
   // }
+
+
 }
 
 class Button {
@@ -53,6 +55,7 @@ class Bar {
     } 
     else{
       this.xcord = 0;
+
     }
     if (this.xcord < 0){
       this.xcord = 0;
@@ -63,19 +66,18 @@ class Bar {
 
 
 
-let hat = new Instrument;
-let clap = new Instrument;
-let ride = new Instrument;
-let snare = new Instrument;
-let kick = new Instrument;
-let g808 = new Instrument;
+let hat = new Instrument();
+let clap = new Instrument();
+let ride = new Instrument();
+let snare = new Instrument();
+let kick = new Instrument();
+let g808 = new Instrument();
 
 let bars;
 let cell = new Cell();
 
 let note = cell.gridX / 4;
 let pushed = 50;
-let timer, lastTimer = 0;
 
 let playState = true;
 let inst;
@@ -106,18 +108,15 @@ function setup() {
 }
 
 function draw() {
-  timer = millis();
   push();
     translate(pushed, 0);
     drawGrid(cell.gridX, cell.gridY);
-    if (playState && timer - lastTimer > 10) {
+
       player();
       smallBar.move(cell.width*cell.gridX, cell.height*cell.gridY, 3);
-    }
-    else{
+    if (!playState){
       smallBar.xcord = 0;
     }
-    lastTimer = timer;
   pop();
   stuffings();
 }
@@ -129,9 +128,9 @@ function draw() {
 
 function player(){
   //plays the bars
-  let xVal = floor(smallBar.xcord / cell.width);
+  let xVal = smallBar.xcord / cell.width;
   for (let i = 0; i < cell.gridY; i++){
-    if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1){
+    if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1 && xVal % 1 === 0){
       bars[i][xVal].play(); 
     }
   }
