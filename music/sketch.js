@@ -25,23 +25,49 @@ class Instrument {
   constructor(){
     this.sound;
   }
-
-  // amp(){
-
-  // }
-
-
 }
 
-class Button {
+// new Button(rgb, x, y, width, height, function() {
+//   console.log("Hi");
+// });
 
+class Button {
+  constructor(colour, x, y, width, height, clickedFunction){
+    this.colour = colour;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.clicked = clickedFunction;
+
+    this.mouse;
+    this.alreadyClicked = false;
+  }
+
+  calcMouse() {//
+    this.mouse = (Math.abs(mouseX - this.x) <= this.width / 2 && Math.abs(mouseY - this.y) <= this.height / 2);
+  }
+
+  displayRect(){//
+    this.calcMouse();
+    if(this.mouse && mouseIsPressed && !this.alreadyClicked) {
+      this.clicked();
+      this.alreadyClicked = true;
+    }
+    if(!mouseIsPressed) {
+      this.alreadyClicked = false;
+    }
+    rectMode(CENTER);
+    fill(colour);
+    rect(this.x, this.y, this.width, this.height);
+  }
 }
 
 class Slider {
 
 }
 
-class Bar {
+class SlidingBar {
   constructor(){
     this.xcord = 0;
   }
@@ -59,6 +85,15 @@ class Bar {
     }
     if (this.xcord < 0){
       this.xcord = 0;
+    }
+  }
+
+  play(){
+    let xVal = this.xcord / cell.width;
+    for (let i = 0; i < cell.gridY; i++){
+      if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1 && xVal % 1 === 0){
+        bars[i][xVal].play(); 
+      }
     }
   }
 }
@@ -81,7 +116,7 @@ let pushed = 50;
 
 let playState = true;
 let inst;
-let smallBar = new Bar;
+let smallBar = new SlidingBar;
 
 
 
@@ -111,9 +146,8 @@ function draw() {
   push();
     translate(pushed, 0);
     drawGrid(cell.gridX, cell.gridY);
-
-      player();
-      smallBar.move(cell.width*cell.gridX, cell.height*cell.gridY, 3);
+    smallBar.play();
+    smallBar.move(cell.width*cell.gridX, cell.height*cell.gridY, 3);
     if (!playState){
       smallBar.xcord = 0;
     }
@@ -126,15 +160,7 @@ function draw() {
 
 
 
-function player(){
-  //plays the bars
-  let xVal = smallBar.xcord / cell.width;
-  for (let i = 0; i < cell.gridY; i++){
-    if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1 && xVal % 1 === 0){
-      bars[i][xVal].play(); 
-    }
-  }
-}
+
 
 function createGrid(Y, N){
   //creates the array
