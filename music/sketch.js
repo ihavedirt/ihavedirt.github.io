@@ -27,13 +27,12 @@ class Instrument {
   }
 }
 
-// new Button(rgb, x, y, width, height, function() {
-//   console.log("Hi");
-// });
 
 class Button {
-  constructor(colour, x, y, width, height, clickedFunction){
-    this.colour = colour;
+  constructor(colour1, colour2, colour3, x, y, width, height, clickedFunction){
+    this.colour1 = colour1;
+    this.colour2 = colour2;
+    this.colour3 = colour3;
     this.x = x;
     this.y = y;
     this.width = width;
@@ -44,11 +43,11 @@ class Button {
     this.alreadyClicked = false;
   }
 
-  calcMouse() {//
+  calcMouse() {//made by Aric Leather
     this.mouse = (Math.abs(mouseX - this.x) <= this.width / 2 && Math.abs(mouseY - this.y) <= this.height / 2);
   }
 
-  displayRect(){//
+  displayRect(){//helped by Aric Leather
     this.calcMouse();
     if(this.mouse && mouseIsPressed && !this.alreadyClicked) {
       this.clicked();
@@ -58,7 +57,7 @@ class Button {
       this.alreadyClicked = false;
     }
     rectMode(CENTER);
-    fill(colour);
+    fill(this.colour1, this.colour2, this.colour3);
     rect(this.x, this.y, this.width, this.height);
   }
 }
@@ -101,6 +100,16 @@ class SlidingBar {
 
 
 
+
+let button = new Button(3,54,73, 30, 270, 40, 40, function() {
+  if (playState){
+    playState = false;
+  }
+  else{
+    playState = true;
+  }
+});
+
 let hat = new Instrument();
 let clap = new Instrument();
 let ride = new Instrument();
@@ -113,6 +122,7 @@ let cell = new Cell();
 
 let note = cell.gridX / 4;
 let pushed = 50;
+let bottomPushed = 70;
 
 let playState = true;
 let inst;
@@ -153,6 +163,10 @@ function draw() {
     }
   pop();
   stuffings();
+  push();
+  button.calcMouse();
+  button.displayRect();
+  pop();
 }
 
 
@@ -204,17 +218,18 @@ function mouseClicked(){
   //change value in array based on location clicked
   let yVal = floor(mouseY / cell.height);
   let xVal = floor((mouseX - pushed) / cell.width);
-  
-  if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
-    bars[yVal][xVal] = inst[yVal];
+
+  if (mouseX > pushed && mouseX < cell.width*cell.gridX && mouseY > 0 && mouseY < cell.height*cell.gridY){
+    if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
+      bars[yVal][xVal] = inst[yVal];
+    }
+    else if ((xVal % 8) < 4){
+      bars[yVal][xVal] = 0;
+    }
+    else{
+      bars[yVal][xVal] = 1;
+    }
   }
-  else if ((xVal % 8) < 4){
-    bars[yVal][xVal] = 0;
-  }
-  else{
-    bars[yVal][xVal] = 1;
-  }
-  console.log(bars);
 }
 
 function keyTyped(){
@@ -227,13 +242,16 @@ function keyTyped(){
 function stuffings(){
   //design stuff
   let underBarDowny = 60;
+  let extendedPattern = 600;
 
   fill(3,22,52);//under the bars
   rect(0, cell.gridY*cell.height, cell.gridX*cell.width + pushed, underBarDowny);
   fill(232,221,203);//left most
   rect(0, 0, pushed, cell.height*cell.gridY);
   // fill(50, 50, 50);// butt
-  // rect(0, cell.height*cell.gridY + underBarDowny, width, height - cell.height*cell.gridY);
+  // rect(0, cell.height*cell.gridY + underBarDowny, cell.gridX*cell.width + pushed + extendedPattern, height - cell.height*cell.gridY);
   // fill(232,221,203);// low cotton
   // rect(0, cell.height*cell.gridY + underBarDowny, width, 10);
+  // fill(232,221,203);//left most bottom
+  // rect(0, cell.height*cell.gridY + underBarDowny, bottomPushed, height - underBarDowny + cell.height*cell.gridY);
 }
