@@ -43,7 +43,7 @@ class Button {
     this.alreadyClicked = false;
   }
 
-  calcMouse() {//made by Aric Leather
+  calcMouse() {//logic by Aric Leather
     this.mouse = (Math.abs(mouseX - this.x) <= this.width / 2 && Math.abs(mouseY - this.y) <= this.height / 2);
   }
 
