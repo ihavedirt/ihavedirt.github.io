@@ -101,7 +101,7 @@ class SlidingBar {
 
 
 
-let button = new Button(3,54,73, 30, 270, 40, 40, function() {
+let button = new Button(0, 0, 0, 30, 270, 40, 40, function() {
   if (playState){
     playState = false;
   }
