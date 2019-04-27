@@ -126,6 +126,7 @@ let bottomPushed = 70;
 
 let playState = true;
 let inst;
+let instLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];
 let smallBar = new SlidingBar;
 
 
@@ -167,6 +168,7 @@ function draw() {
   button.calcMouse();
   button.displayRect();
   pop();
+  isntLabels();
 }
 
 
@@ -254,4 +256,13 @@ function stuffings(){
   // rect(0, cell.height*cell.gridY + underBarDowny, width, 10);
   // fill(232,221,203);//left most bottom
   // rect(0, cell.height*cell.gridY + underBarDowny, bottomPushed, height - underBarDowny + cell.height*cell.gridY);
+}
+
+function isntLabels(){
+  textSize(13);
+  textAlign(CENTER);
+  fill(0);
+  for (let i = 0; i < 6; i++){
+    text(instLabel[i], pushed/2, (cell.height/2)+cell.height*i);
+  }
 }
