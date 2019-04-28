@@ -62,10 +62,6 @@ class Button {
   }
 }
 
-class Slider {
-
-}
-
 class SlidingBar {
   constructor(){
     this.xcord = 0;
@@ -129,7 +125,8 @@ let inst;
 let instLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];
 let smallBar = new SlidingBar;
 
-
+let slider;
+let lastClicked;
 
 
 function preload(){
@@ -151,6 +148,10 @@ function setup() {
 
   strokeWeight(0.2);
   stroke('white');
+
+  slider = createSlider(0, 1, 0.5, 0.1);
+  slider.position(pushed + 20, cell.height*cell.gridY+20);
+  slider.style('width', '100px');
 }
 
 function draw() {
@@ -265,4 +266,8 @@ function isntLabels(){
   for (let i = 0; i < 6; i++){
     text(instLabel[i], pushed/2, (cell.height/2)+cell.height*i);
   }
+}
+
+function instVolumeChanger(){
+
 }
