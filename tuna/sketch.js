@@ -12,11 +12,11 @@
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
 class Cell {
-  constructor(){
-    this.width = 15;
-    this.height = 40;
-    this.gridY = 6;
-    this.gridX = 32;
+  constructor(width, height, gridY, gridX){
+    this.width = width;
+    this.height = height;
+    this.gridY = gridY;
+    this.gridX = gridX;
   }
 }
 
@@ -116,9 +116,13 @@ class SlidingBar {
 
 
 
+let barReset = new Button(50,50,50, 583, 270, 80, 40, function(){
+  for (let i = 0; i < 6; i++){
+    slider[i].value(0.5);
+  }
+});
 
-
-let button = new Button(50,50,50, 30, 270, 40, 40, function() {
+let playButton = new Button(50,50,50, 30, 270, 40, 40, function() {
   if (playState){
     playState = false;
   }
@@ -134,18 +138,18 @@ let snare = new Instrument();
 let kick = new Instrument();
 let g808 = new Instrument();
 
-let bars;
-let cell = new Cell();
+let bars;//bar grid
+let cell = new Cell(15, 40, 6, 32);//cell of bars property
 
-let note = cell.gridX / 4;
-let pushed = 50;
+let note = cell.gridX / 4;//time signature(4 4)
+let pushed = 50;//cotton on side
 
 let playState = false;
-let inst;
-let instLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];
-let smallBar = new SlidingBar;
+let inst;//array for soundfiles
+let instLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];//labels on the side of bar
+let smallBar = new SlidingBar;//bar's bar
 
-let slider = [];
+let slider = [];//array of sliders for instruments
 // let lastClicked;
 
 
@@ -194,7 +198,7 @@ function setup() {
   instSliders();
 
   textSize(18);
-  text('click in the bar to add sound to pattern, click spacebar to set where to play, play/pause button is that thing at bottom left', 700, 100);
+  text('Click in the bar to add sound to pattern        Click spacebar to set where to play        Play/pause button is box at bottom left        button below sliders resets volume', 700, 100, 350);
 }
 
 function draw() {
@@ -209,10 +213,14 @@ function draw() {
       smallBar.xcord = 0;
     }
   pop();
+
   stuffings();
+
   push();
-  button.calcMouse();
-  button.displayRect();
+  playButton.calcMouse();
+  playButton.displayRect();
+  barReset.calcMouse();
+  barReset.displayRect();
   pop();
   instLabels();
   instVolumeChanger();
@@ -297,7 +305,7 @@ function mouseClicked(){
     }
   }
 
-  // returns last clicked inst
+  // // returns last clicked inst
   // if (mouseX > pushed && mouseX < cell.width*cell.gridX && mouseY > 0 && mouseY < cell.height*cell.gridY){
   //   lastClicked = inst[yVal];
   //   return lastClicked;
@@ -346,7 +354,7 @@ function instSliders(){
   //creates individual sliders for each instrument
   for (let i = 0; i < 6; i++){
     slider.push(i);
-    slider[i] = createSlider(0, 1, 0.5, 0.1);
+    slider[i] = createSlider(0, 1, 0.5, 0.01);
     slider[i].position(pushed + cell.width*cell.gridX + 3, (cell.height/2 - 13)+cell.height*i);
     slider[i].style('width', '100px');
   }
