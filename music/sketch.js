@@ -1,11 +1,13 @@
 // Tuna
 // David Baik
-// Tomorrow
+// April 28th, 2019
 //
 // Extra for Experts:
 // made a grid with a grid inside it, working with mouse interactions(triple nested loop?)
 // moving indicator bar that plays sound based on pattern input 
 // classes to simplify code
+// added slider to control volume
+// used various arrays and for loops to simplify long codes
 
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
@@ -41,11 +43,13 @@ class Button {
     this.alreadyClicked = false;
   }
 
-  calcMouse() {//logic by Aric Leather
+  calcMouse() {
+    //logic by Aric Leather
     this.mouse = (Math.abs(mouseX - this.x) <= this.width / 2 && Math.abs(mouseY - this.y) <= this.height / 2);
   }
 
-  displayRect(){//helped by Aric Leather
+  displayRect(){
+    //helped by Aric Leather
     this.calcMouse();
     if(this.mouse && mouseIsPressed && !this.alreadyClicked) {
       this.clicked();
@@ -82,6 +86,7 @@ class SlidingBar {
   }
 
   play(){
+    //plays the sound file at given point of sliding bar
     let xVal = this.xcord / cell.width;
     for (let i = 0; i < cell.gridY; i++){
       if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1 && xVal % 1 === 0){
@@ -307,7 +312,7 @@ function keyTyped(){
 }
 
 function stuffings(){
-  //design stuff
+  //design stuff refer to map(David has it)
   let underBarDowny = 60;
   let extendedPattern = 1500;
   let bottomPushed = 70;
@@ -348,6 +353,7 @@ function instSliders(){
 }
 
 function instVolumeChanger(){
+  //actually changes the volume depending on value from slider
   for (let i = 0; i < 6; i++){
     inst[i].setVolume(slider[i].value());
   }
