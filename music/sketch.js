@@ -3,12 +3,9 @@
 // Tomorrow
 //
 // Extra for Experts:
-// lots of sound stuff i hope
-// 
-
-//need
-
-//want
+// made a grid with a grid inside it, working with mouse interactions(triple nested loop?)
+// moving indicator bar that plays sound based on pattern input 
+// classes to simplify code
 
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
@@ -22,6 +19,7 @@ class Cell {
 }
 
 class Instrument {
+  //will use this more later on
   constructor(){
     this.sound;
   }
@@ -97,7 +95,25 @@ class SlidingBar {
 
 
 
-let button = new Button(0, 0, 0, 30, 270, 40, 40, function() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let button = new Button(50,50,50, 30, 270, 40, 40, function() {
   if (playState){
     playState = false;
   }
@@ -118,15 +134,36 @@ let cell = new Cell();
 
 let note = cell.gridX / 4;
 let pushed = 50;
-let bottomPushed = 70;
 
-let playState = true;
+let playState = false;
 let inst;
 let instLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];
 let smallBar = new SlidingBar;
 
-let slider;
-let lastClicked;
+let slider = [];
+// let lastClicked;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function preload(){
@@ -149,18 +186,21 @@ function setup() {
   strokeWeight(0.2);
   stroke('white');
 
-  slider = createSlider(0, 1, 0.5, 0.1);
-  slider.position(pushed + 20, cell.height*cell.gridY+20);
-  slider.style('width', '100px');
+  instSliders();
+
+  textSize(18);
+  text('click in the bar to add sound to pattern, click spacebar to set where to play, play/pause button is that thing at bottom left', 700, 100);
 }
 
 function draw() {
   push();
     translate(pushed, 0);
     drawGrid(cell.gridX, cell.gridY);
-    smallBar.play();
-    smallBar.move(cell.width*cell.gridX, cell.height*cell.gridY, 3);
-    if (!playState){
+    if (playState){
+      smallBar.play();
+      smallBar.move(cell.width*cell.gridX, cell.height*cell.gridY, 3);
+    }
+    else{
       smallBar.xcord = 0;
     }
   pop();
@@ -169,8 +209,26 @@ function draw() {
   button.calcMouse();
   button.displayRect();
   pop();
-  isntLabels();
+  instLabels();
+  instVolumeChanger();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -222,7 +280,7 @@ function mouseClicked(){
   let yVal = floor(mouseY / cell.height);
   let xVal = floor((mouseX - pushed) / cell.width);
 
-  if (mouseX > pushed && mouseX < cell.width*cell.gridX && mouseY > 0 && mouseY < cell.height*cell.gridY){
+  if (mouseX > pushed && mouseX < cell.width*cell.gridX + pushed && mouseY > 0 && mouseY < cell.height*cell.gridY){
     if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
       bars[yVal][xVal] = inst[yVal];
     }
@@ -233,6 +291,12 @@ function mouseClicked(){
       bars[yVal][xVal] = 1;
     }
   }
+
+  // returns last clicked inst
+  // if (mouseX > pushed && mouseX < cell.width*cell.gridX && mouseY > 0 && mouseY < cell.height*cell.gridY){
+  //   lastClicked = inst[yVal];
+  //   return lastClicked;
+  // }
 }
 
 function keyTyped(){
@@ -245,21 +309,26 @@ function keyTyped(){
 function stuffings(){
   //design stuff
   let underBarDowny = 60;
-  let extendedPattern = 600;
+  let extendedPattern = 1500;
+  let bottomPushed = 70;
+  let afterPushed = 110;
 
-  fill(3,22,52);//under the bars
+  fill(33,33,33);//under the bars
   rect(0, cell.gridY*cell.height, cell.gridX*cell.width + pushed, underBarDowny);
   fill(232,221,203);//left most
   rect(0, 0, pushed, cell.height*cell.gridY);
-  // fill(50, 50, 50);// butt
-  // rect(0, cell.height*cell.gridY + underBarDowny, cell.gridX*cell.width + pushed + extendedPattern, height - cell.height*cell.gridY);
-  // fill(232,221,203);// low cotton
-  // rect(0, cell.height*cell.gridY + underBarDowny, width, 10);
-  // fill(232,221,203);//left most bottom
-  // rect(0, cell.height*cell.gridY + underBarDowny, bottomPushed, height - underBarDowny + cell.height*cell.gridY);
+  fill(50, 50, 50);// butt
+  rect(0, cell.height*cell.gridY + underBarDowny, cell.gridX*cell.width + pushed + extendedPattern, height - cell.height*cell.gridY);
+  fill(232,221,203);//left most bottom
+  rect(0, cell.height*cell.gridY + underBarDowny, bottomPushed, height - underBarDowny + cell.height*cell.gridY);
+  fill(33,33,33);//slider cotton
+  rect(pushed + cell.width*cell.gridX, 0, afterPushed, cell.height*cell.gridY+underBarDowny);
+  fill(33,33,33);// low cotton
+  rect(0, cell.height*cell.gridY + underBarDowny, cell.gridX*cell.width + pushed + extendedPattern, 10);
 }
 
-function isntLabels(){
+function instLabels(){
+  //label for the instruments in the bar
   textSize(13);
   textAlign(CENTER);
   fill(0);
@@ -268,6 +337,18 @@ function isntLabels(){
   }
 }
 
-function instVolumeChanger(){
+function instSliders(){
+  //creates individual sliders for each instrument
+  for (let i = 0; i < 6; i++){
+    slider.push(i);
+    slider[i] = createSlider(0, 1, 0.5, 0.1);
+    slider[i].position(pushed + cell.width*cell.gridX + 3, (cell.height/2 - 13)+cell.height*i);
+    slider[i].style('width', '100px');
+  }
+}
 
+function instVolumeChanger(){
+  for (let i = 0; i < 6; i++){
+    inst[i].setVolume(slider[i].value());
+  }
 }
