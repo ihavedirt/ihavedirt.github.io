@@ -12,11 +12,53 @@
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
 class Cell {
-  constructor(width, height, gridY, gridX){
-    this.width = width;
-    this.height = height;
-    this.gridY = gridY;
-    this.gridX = gridX;
+  constructor(width, height, gridY, gridX, colourLight, colourDark){
+    this.width = width;//individual cell width
+    this.height = height;//individual cell height
+    this.gridY = gridY;//number of cells on Y
+    this.gridX = gridX;//number of cells on X
+    this.note = gridX / 4;//time signature(4 4)
+
+    this.colourLight = colourLight;
+    this.colourDark = colourDark;
+  }
+
+  createGrid(){
+    //creates the array
+    let array = [];
+    for (let i = 0; i < this.gridY; i++){
+      let rows = [];
+      for (let j = 0; j < this.note; j++){
+        for (let k = 0; k < 4; k++){
+          rows.push(0);
+        }
+        for (let l = 0; l < 4; l++){
+          rows.push(1);
+        }
+      }
+      array.push(rows);
+    }
+    return array;
+  }
+
+  drawGrid(){
+    //draws the grid based on array, with alternating colours
+    for (let i = 0; i < this.gridY; i++){
+      for (let j = 0; j < this.gridX; j++){
+        if (bars[i][j] === 0){
+          //dark
+          fill(this.colourDark, this.colourDark, this.colourDark);
+        }
+        else if(bars[i][j] === 1){
+          //light
+          fill(this.colourLight, this.colourLight, this.colourLight);
+        }
+        else{
+          fill(183,178,171);
+        }
+        rect(j*this.width, i*this.height, this.width, this.height);
+      }
+    }
   }
 }
 
@@ -85,10 +127,10 @@ class SlidingBar {
     }
   }
 
-  play(){
+  barPlay(){
     //plays the sound file at given point of sliding bar
-    let xVal = this.xcord / cell.width;
-    for (let i = 0; i < cell.gridY; i++){
+    let xVal = this.xcord / barCell.width;
+    for (let i = 0; i < barCell.gridY; i++){
       if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1 && xVal % 1 === 0){
         bars[i][xVal].play(); 
       }
@@ -139,10 +181,17 @@ let kick = new Instrument();
 let g808 = new Instrument();
 
 let bars;//bar grid
-let cell = new Cell(15, 40, 6, 32);//cell of bars property
+let barCell = new Cell(15, 40, 6, 32, 50, 30);//barCell of bars property
 
-let note = cell.gridX / 4;//time signature(4 4)
+let sheet;
+let sheetCell = new Cell(25, 50, 6, 64);
+
 let pushed = 50;//cotton on side
+let underBarDowny = 60;
+let extendedPattern = 1500;
+let bottomPushed = 70;
+let sliderCotton = 110;
+let divider = 10;
 
 let playState = false;
 let inst;//array for soundfiles
@@ -186,11 +235,11 @@ function preload(){
 
 function setup() {
   frameRate(100);
+  createCanvas(windowWidth, windowHeight);
 
   inst = [hat.sound, clap.sound, ride.sound, snare.sound, kick.sound, g808.sound];
-  bars = createGrid(cell.gridY, note)
-
-  createCanvas(windowWidth, windowHeight);
+  bars = barCell.createGrid();
+  sheet = sheetCell.createGrid();
 
   strokeWeight(0.2);
   stroke('white');
@@ -202,26 +251,32 @@ function setup() {
 }
 
 function draw() {
+  stuffings();
+
   push();
     translate(pushed, 0);
-    drawGrid(cell.gridX, cell.gridY);
+    barCell.drawGrid();
     if (playState){
-      smallBar.play();
-      smallBar.move(cell.width*cell.gridX, cell.height*cell.gridY, 3);
+      smallBar.barPlay();
+      smallBar.move(barCell.width*barCell.gridX, barCell.height*barCell.gridY, 3);
     }
     else{
       smallBar.xcord = 0;
     }
   pop();
 
-  stuffings();
+  push();
+    translate(bottomPushed, barCell.gridY*barCell.height + underBarDowny + divider);
+    // sheetCell.drawGrid();
+  pop();
 
   push();
-  playButton.calcMouse();
-  playButton.displayRect();
-  barReset.calcMouse();
-  barReset.displayRect();
+    playButton.calcMouse();
+    playButton.displayRect();
+    barReset.calcMouse();
+    barReset.displayRect();
   pop();
+
   instLabels();
   instVolumeChanger();
 }
@@ -250,50 +305,13 @@ function draw() {
 
 
 
-function createGrid(Y, N){
-  //creates the array
-  let array = [];
-  for (let i = 0; i < Y; i++){
-    let rows = [];
-    for (let j = 0; j < N; j++){
-      for (let k = 0; k < 4; k++){
-        rows.push(0);
-      }
-      for (let l = 0; l < 4; l++){
-        rows.push(1);
-      }
-    }
-    array.push(rows);
-  }
-  return array;
-}
-
-function drawGrid(X, Y){
-  //draws the grid based on array, with alternating colours
-  for (let i = 0; i < Y; i++){
-    for (let j = 0; j < X; j++){
-      if (bars[i][j] === 0){
-        //dark
-        fill(33, 33, 33);
-      }
-      else if(bars[i][j] === 1){
-        //light
-        fill(50, 50, 50);
-      }
-      else{
-        fill(183,178,171);
-      }
-      rect(j*cell.width, i*cell.height, cell.width, cell.height);
-    }
-  }
-}
 
 function mouseClicked(){
   //change value in array based on location clicked
-  let yVal = floor(mouseY / cell.height);
-  let xVal = floor((mouseX - pushed) / cell.width);
+  let yVal = floor(mouseY / barCell.height);
+  let xVal = floor((mouseX - pushed) / barCell.width);
 
-  if (mouseX > pushed && mouseX < cell.width*cell.gridX + pushed && mouseY > 0 && mouseY < cell.height*cell.gridY){
+  if (mouseX > pushed && mouseX < barCell.width*barCell.gridX + pushed && mouseY > 0 && mouseY < barCell.height*barCell.gridY){
     if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
       bars[yVal][xVal] = inst[yVal];
     }
@@ -306,7 +324,7 @@ function mouseClicked(){
   }
 
   // // returns last clicked inst
-  // if (mouseX > pushed && mouseX < cell.width*cell.gridX && mouseY > 0 && mouseY < cell.height*cell.gridY){
+  // if (mouseX > pushed && mouseX < barCell.width*barCell.gridX && mouseY > 0 && mouseY < barCell.height*barCell.gridY){
   //   lastClicked = inst[yVal];
   //   return lastClicked;
   // }
@@ -321,23 +339,19 @@ function keyTyped(){
 
 function stuffings(){
   //design stuff refer to map(David has it)
-  let underBarDowny = 60;
-  let extendedPattern = 1500;
-  let bottomPushed = 70;
-  let afterPushed = 110;
 
   fill(33,33,33);//under the bars
-  rect(0, cell.gridY*cell.height, cell.gridX*cell.width + pushed, underBarDowny);
+  rect(0, barCell.gridY*barCell.height, barCell.gridX*barCell.width + pushed, underBarDowny);
   fill(232,221,203);//left most
-  rect(0, 0, pushed, cell.height*cell.gridY);
+  rect(0, 0, pushed, barCell.height*barCell.gridY);
   fill(50, 50, 50);// butt
-  rect(0, cell.height*cell.gridY + underBarDowny, cell.gridX*cell.width + pushed + extendedPattern, height - cell.height*cell.gridY);
+  rect(0, barCell.height*barCell.gridY + underBarDowny, barCell.gridX*barCell.width + pushed + extendedPattern, height - barCell.height*barCell.gridY);
   fill(232,221,203);//left most bottom
-  rect(0, cell.height*cell.gridY + underBarDowny, bottomPushed, height - underBarDowny + cell.height*cell.gridY);
+  rect(0, barCell.height*barCell.gridY + underBarDowny, bottomPushed, height - underBarDowny + barCell.height*barCell.gridY);
   fill(33,33,33);//slider cotton
-  rect(pushed + cell.width*cell.gridX, 0, afterPushed, cell.height*cell.gridY+underBarDowny);
+  rect(pushed + barCell.width*barCell.gridX, 0, sliderCotton, barCell.height*barCell.gridY+underBarDowny);
   fill(33,33,33);// low cotton
-  rect(0, cell.height*cell.gridY + underBarDowny, cell.gridX*cell.width + pushed + extendedPattern, 10);
+  rect(0, barCell.height*barCell.gridY + underBarDowny, barCell.gridX*barCell.width + pushed + extendedPattern, divider);
 }
 
 function instLabels(){
@@ -346,7 +360,7 @@ function instLabels(){
   textAlign(CENTER);
   fill(0);
   for (let i = 0; i < 6; i++){
-    text(instLabel[i], pushed/2, (cell.height/2)+cell.height*i);
+    text(instLabel[i], pushed/2, (barCell.height/2)+barCell.height*i);
   }
 }
 
@@ -355,7 +369,7 @@ function instSliders(){
   for (let i = 0; i < 6; i++){
     slider.push(i);
     slider[i] = createSlider(0, 1, 0.5, 0.01);
-    slider[i].position(pushed + cell.width*cell.gridX + 3, (cell.height/2 - 13)+cell.height*i);
+    slider[i].position(pushed + barCell.width*barCell.gridX + 3, (barCell.height/2 - 13)+barCell.height*i);
     slider[i].style('width', '100px');
   }
 }
