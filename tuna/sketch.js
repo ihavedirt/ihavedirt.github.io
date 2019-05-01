@@ -12,15 +12,12 @@
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
 class Cell {
-  constructor(width, height, gridY, gridX, colourLight, colourDark){
+  constructor(width, height, gridY, gridX){
     this.width = width;//individual cell width
     this.height = height;//individual cell height
     this.gridY = gridY;//number of cells on Y
     this.gridX = gridX;//number of cells on X
     this.note = gridX / 4;//time signature(4 4)
-
-    this.colourLight = colourLight;
-    this.colourDark = colourDark;
   }
 
   createGrid(){
@@ -39,26 +36,6 @@ class Cell {
       array.push(rows);
     }
     return array;
-  }
-
-  drawGrid(){
-    //draws the grid based on array, with alternating colours
-    for (let i = 0; i < this.gridY; i++){
-      for (let j = 0; j < this.gridX; j++){
-        if (bars[i][j] === 0){
-          //dark
-          fill(this.colourDark, this.colourDark, this.colourDark);
-        }
-        else if(bars[i][j] === 1){
-          //light
-          fill(this.colourLight, this.colourLight, this.colourLight);
-        }
-        else{
-          fill(183,178,171);
-        }
-        rect(j*this.width, i*this.height, this.width, this.height);
-      }
-    }
   }
 }
 
@@ -158,21 +135,6 @@ class SlidingBar {
 
 
 
-let barReset = new Button(50,50,50, 583, 270, 80, 40, function(){
-  for (let i = 0; i < 6; i++){
-    slider[i].value(0.5);
-  }
-});
-
-let playButton = new Button(50,50,50, 30, 270, 40, 40, function() {
-  if (playState){
-    playState = false;
-  }
-  else{
-    playState = true;
-  }
-});
-
 let hat = new Instrument();
 let clap = new Instrument();
 let ride = new Instrument();
@@ -181,10 +143,10 @@ let kick = new Instrument();
 let g808 = new Instrument();
 
 let bars;//bar grid
-let barCell = new Cell(15, 40, 6, 32, 50, 30);//barCell of bars property
+let barCell = new Cell(15, 40, 6, 32);
 
 let sheet;
-let sheetCell = new Cell(25, 50, 6, 64);
+let sheetCell = new Cell(20, 70, 10, 100);
 
 let pushed = 50;//cotton on side
 let underBarDowny = 60;
@@ -202,6 +164,20 @@ let slider = [];//array of sliders for instruments
 // let lastClicked;
 
 
+let barReset = new Button(50,50,50, 583, barCell.gridY*barCell.height + (underBarDowny/2), 80, 40, function(){
+  for (let i = 0; i < 6; i++){
+    slider[i].value(0.5);
+  }
+});
+
+let playButton = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underBarDowny/2), 40, 40, function() {
+  if (playState){
+    playState = false;
+  }
+  else{
+    playState = true;
+  }
+});
 
 
 
@@ -255,7 +231,7 @@ function draw() {
 
   push();
     translate(pushed, 0);
-    barCell.drawGrid();
+    drawBarGrid(barCell.gridY, barCell.gridX);
     if (playState){
       smallBar.barPlay();
       smallBar.move(barCell.width*barCell.gridX, barCell.height*barCell.gridY, 3);
@@ -267,7 +243,8 @@ function draw() {
 
   push();
     translate(bottomPushed, barCell.gridY*barCell.height + underBarDowny + divider);
-    // sheetCell.drawGrid();
+    stroke('grey');
+    drawSheetGrid(sheetCell.gridY, sheetCell.gridX);
   pop();
 
   push();
@@ -305,6 +282,45 @@ function draw() {
 
 
 
+function drawBarGrid(y, x){
+  //draws the grid based on array, with alternating colours
+  for (let i = 0; i < y; i++){
+    for (let j = 0; j < x; j++){
+      if (bars[i][j] === 0){
+        //dark
+        fill(33, 33, 33);
+      }
+      else if(bars[i][j] === 1){
+        //light
+        fill(50, 50, 50);
+      }
+      else{
+        fill(183,178,171);
+      }
+      rect(j*barCell.width, i*barCell.height, barCell.width, barCell.height);
+    }
+  }
+}
+
+function drawSheetGrid(y, x){
+  //draws the grid based on array, with alternating colours
+  for (let i = 0; i < y; i++){
+    for (let j = 0; j < x; j++){
+      if (sheet[i][j] === 0){
+        //dark
+        fill(47, 47, 47);
+      }
+      else if(sheet[i][j] === 1){
+        //light
+        fill(50, 50, 50);
+      }
+      else{
+        fill(183,178,171);
+      }
+      rect(j*sheetCell.width, i*sheetCell.height, sheetCell.width, sheetCell.height);
+    }
+  }
+}
 
 function mouseClicked(){
   //change value in array based on location clicked
