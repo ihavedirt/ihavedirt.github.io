@@ -84,15 +84,16 @@ class Button {
 }
 
 class SlidingBar {
-  constructor(){
+  constructor(tempo){
     this.xcord = 0;
+    this.tempo = tempo;
   }
 
-  move(windWidth, windHeight, bpm){
+  move(windWidth, windHeight){
   //visual slider when playState
     strokeWeight(1);
     if (this.xcord < windWidth){
-      this.xcord+= bpm;
+      this.xcord+= this.tempo;
       line(this.xcord, 0, this.xcord, windHeight);
     } 
     else{
@@ -146,7 +147,7 @@ let bars;//bar grid
 let barCell = new Cell(15, 40, 6, 32);
 
 let sheet;
-let sheetCell = new Cell(20, 70, 10, 100);
+let sheetCell = new Cell(20, 70, 10, 65);
 
 let pushed = 50;//cotton on side
 let underBarDowny = 60;
@@ -158,19 +159,20 @@ let divider = 10;
 let playState = false;
 let inst;//array for soundfiles
 let instLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];//labels on the side of bar
-let smallBar = new SlidingBar;//bar's bar
+let smallBar = new SlidingBar(3);//bar's bar
+let tempo = 3;
 
 let slider = [];//array of sliders for instruments
 // let lastClicked;
 
 
-let barReset = new Button(50,50,50, 583, barCell.gridY*barCell.height + (underBarDowny/2), 80, 40, function(){
+let barVolumeReset = new Button(50,50,50, 583, barCell.gridY*barCell.height + (underBarDowny/2), 80, 34, function(){
   for (let i = 0; i < 6; i++){
     slider[i].value(0.5);
   }
 });
 
-let playButton = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underBarDowny/2), 40, 40, function() {
+let playButton = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underBarDowny/2), 40, 40, function(){
   if (playState){
     playState = false;
   }
@@ -179,7 +181,30 @@ let playButton = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underB
   }
 });
 
+let barReset = new Button(50,50,50, 90, barCell.gridY*barCell.height + (underBarDowny/2), 50, 30, function(){
+  for (let i = 0; i < barCell.gridY; i++){
+    for (let j = 0; j < barCell.note; j++){
+      for (let k = 0; k < 4; k++){
+        bars[i].shift();
+        bars[i].push(0);
+      }
+      for (let l = 0; l < 4; l++){
+        bars[i].shift();
+        bars[i].push(1);
+      }
+    }
+  }
+});
 
+let tempoUp = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarDowny/2)-10, 24, 14, function(){
+  smallBar.tempo += 0.5;
+});
+
+let tempoDown = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarDowny/2)+10, 24, 14, function(){
+  if (smallBar.tempo > 0){
+    smallBar.tempo -= 0.5;
+  }
+});
 
 
 
@@ -234,7 +259,7 @@ function draw() {
     drawBarGrid(barCell.gridY, barCell.gridX);
     if (playState){
       smallBar.barPlay();
-      smallBar.move(barCell.width*barCell.gridX, barCell.height*barCell.gridY, 3);
+      smallBar.move(barCell.width*barCell.gridX, barCell.height*barCell.gridY);
     }
     else{
       smallBar.xcord = 0;
@@ -250,8 +275,14 @@ function draw() {
   push();
     playButton.calcMouse();
     playButton.displayRect();
+    barVolumeReset.calcMouse();
+    barVolumeReset.displayRect();
     barReset.calcMouse();
     barReset.displayRect();
+    tempoUp.calcMouse();
+    tempoUp.displayRect();
+    tempoDown.calcMouse();
+    tempoDown.displayRect();
   pop();
 
   instLabels();
@@ -375,7 +406,7 @@ function instLabels(){
   textSize(13);
   textAlign(CENTER);
   fill(0);
-  for (let i = 0; i < 6; i++){
+  for (let i = 0; i < instLabel.length; i++){
     text(instLabel[i], pushed/2, (barCell.height/2)+barCell.height*i);
   }
 }
