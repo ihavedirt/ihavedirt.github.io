@@ -11,6 +11,9 @@
 
 // colour palette https://www.colourlovers.com/palette/292482/Terra
 
+//people and activities
+//
+
 class Cell {
   constructor(width, height, gridY, gridX){
     this.width = width;//individual cell width
@@ -149,6 +152,8 @@ let barCell = new Cell(15, 40, 6, 32);
 let sheet;
 let sheetCell = new Cell(20, 70, 10, 65);
 
+let keyboard;
+
 let pushed = 50;//cotton on side
 let underBarDowny = 60;
 let extendedPattern = 1500;
@@ -266,6 +271,9 @@ function draw() {
     }
   pop();
 
+  instLabels();
+  instVolumeChanger();
+
   push();
     translate(bottomPushed, barCell.gridY*barCell.height + underBarDowny + divider);
     stroke('grey');
@@ -285,8 +293,11 @@ function draw() {
     tempoDown.displayRect();
   pop();
 
-  instLabels();
-  instVolumeChanger();
+  push();
+  translate(pushed+barCell.gridX*barCell.width+sliderCotton, 0);
+  rect(0, 0, 700, 200)
+  pop();
+
 }
 
 
