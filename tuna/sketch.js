@@ -119,6 +119,26 @@ class SlidingBar {
   }
 }
 
+class Keyboard{
+  constructor(){
+    this.whiteKey;
+    this.blackKey;
+  }
+
+  draw(){
+    fill(255);
+    stroke(33,33,33);
+    for (let i = 0; i < 14; i++){
+      rect(i*60, 0, 60, 200,0 ,0, 4, 4);
+    }
+    fill(33,33,33);
+    for (let j = 0; j < 13; j++){
+      if (j != 2 && j != 6 && j != 9){
+        rect(40+j*60, 0, 40, 150, 0, 0, 5, 5);
+      }
+    }
+  }
+}
 
 
 
@@ -152,8 +172,6 @@ let barCell = new Cell(15, 40, 6, 32);
 let sheet;
 let sheetCell = new Cell(20, 70, 10, 65);
 
-let keyboard;
-
 let pushed = 50;//cotton on side
 let underBarDowny = 60;
 let extendedPattern = 1500;
@@ -170,6 +188,7 @@ let tempo = 3;
 let slider = [];//array of sliders for instruments
 // let lastClicked;
 
+let keyboard = new Keyboard();
 
 let barVolumeReset = new Button(50,50,50, 583, barCell.gridY*barCell.height + (underBarDowny/2), 80, 34, function(){
   for (let i = 0; i < 6; i++){
@@ -269,7 +288,9 @@ function draw() {
     else{
       smallBar.xcord = 0;
     }
+    highlight();
   pop();
+
 
   instLabels();
   instVolumeChanger();
@@ -294,8 +315,8 @@ function draw() {
   pop();
 
   push();
-  translate(pushed+barCell.gridX*barCell.width+sliderCotton, 0);
-  rect(0, 0, 700, 200)
+  translate(pushed+barCell.gridX*barCell.width+sliderCotton + 5, 5);
+  keyboard.draw();
   pop();
 
 }
@@ -364,6 +385,18 @@ function drawSheetGrid(y, x){
   }
 }
 
+function highlight(){
+  let yVal = floor(mouseY / barCell.height);
+  let xVal = floor((mouseX - pushed) / barCell.width);
+
+  if (mouseX > pushed && mouseX < barCell.width*barCell.gridX + pushed && mouseY > 0 && mouseY < barCell.height*barCell.gridY){
+    if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
+      fill(60,60,60);
+      rect(xVal*barCell.width, yVal*barCell.height, barCell.width, barCell.height);
+    }
+  }
+}
+
 function mouseClicked(){
   //change value in array based on location clicked
   let yVal = floor(mouseY / barCell.height);
@@ -410,6 +443,8 @@ function stuffings(){
   rect(pushed + barCell.width*barCell.gridX, 0, sliderCotton, barCell.height*barCell.gridY+underBarDowny);
   fill(33,33,33);// low cotton
   rect(0, barCell.height*barCell.gridY + underBarDowny, barCell.gridX*barCell.width + pushed + extendedPattern, divider);
+  fill(232,221,203);//under keyboard
+  rect(pushed+barCell.gridX*barCell.width+sliderCotton, 0, 850, 210);
 }
 
 function instLabels(){
